@@ -1,0 +1,14 @@
+[
+  {
+    "publisher": "중앙일보",
+    "title": "전체기사",
+    "URI": "http://rss.joins.com/joins_news_list.xml",
+    "selected": true
+  },
+  {
+    "publisher": "노컷뉴스",
+    "title": "최신기사",
+    "URI": "http://rss.nocutnews.co.kr/nocutnews.xml",
+    "selected": true
+  }
+]

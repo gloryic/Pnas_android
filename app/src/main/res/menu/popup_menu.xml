@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+
+    <item
+        android:id="@+id/btn_popup_one"
+        android:title="컨텐츠 전체 업데이트"
+        android:layout_width="wrap_content"/>
+
+ 	<item
+        android:id="@+id/btn_popup_two"
+        android:title="광고 정보 업데이트"/>
+
+    <item
+        android:id="@+id/btn_popup_three"
+        android:title="실험실"/>
+    <item
+        android:id="@+id/btn_popup_four"
+        android:title="개발자 보기"/>
+
+</menu>

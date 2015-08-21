@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="듣고싶은 컨텐츠들을 선택하세요." >
+        <CheckBoxPreference
+            android:disableDependentsState="false"
+            android:key="Weather"
+            android:summaryOff="사용하지 않습니다."
+            android:title="날씨" />
+        <CheckBoxPreference
+            android:disableDependentsState="false"
+            android:key="News"
+            android:summaryOff="사용하지 않습니다."
+            android:title="뉴스" />
+        <CheckBoxPreference
+            android:disableDependentsState="false"
+            android:key="Music"
+            android:summaryOff="사용하지 않습니다."
+            android:title="뮤직" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:disableDependentsState="false"
+            android:key="Calendar"
+            android:summaryOff="사용하지 않습니다."
+            android:summaryOn="사용합니다."
+            android:title="일정" />
+        <CheckBoxPreference
+            android:disableDependentsState="false"
+            android:key="PhoneLogFree"
+            android:summaryOff="사용하지 않습니다."
+            android:title="통화정보-무료통화" />
+        <CheckBoxPreference
+            android:disableDependentsState="false"
+            android:key="PhoneLogRelationship"
+            android:summaryOff="사용하지 않습니다."
+            android:summaryOn="사용합니다."
+            android:title="통화정보-상대방과의 통화관계" />
+        <CheckBoxPreference
+            android:disableDependentsState="false"
+            android:key="UserTTS"
+            android:summaryOff="사용하지 않습니다."
+            android:summaryOn="사용합니다."
+            android:title="사용자TTS" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

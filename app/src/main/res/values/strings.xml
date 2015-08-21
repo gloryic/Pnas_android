@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pnas</string>
+    <string name="app_version">V1.0</string>
+    
+    
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string> 
+    
+    <string name="hello_message">Welcome! Tell us a bit more about yourself.</string>
+    <string name="gender_text_view">Gender</string>
+    <string name="age_text_view">Age</string>
+    <string name="interests">Interests</string>
+    <string name="gender_male_button">Male</string>
+    <string name="gender_female_button">Female</string>
+    <string name="save_button">Save</string>
+    <string name="refresh_button">Refresh</string>
+    <string name="ok_button">OK</string>
+    <string name="alert_dialog_title">Profile</string>
+    <string name="alert_dialog_success">Saved!</string>
+	<string name="alert_dialog_failed">Failed with error.</string>
+	
+	<string name="prev">이전</string>
+	<string name="next">다음</string>
+	
+	<string name="set_radius">반경 설정</string>
+	
+	<string name="empty"></string>
+	
+    <string name="main_label">Daum Speech Open API</string>
+    <string name="app_description">Daum 음성인식 Open API 샘플입니다.\n
+        \n
+        Start to speak: 직접 음성인식 실행\n
+        Open Activity: 제공된 UI를 통해 음성인식\n
+        \n
+        Stop recording: 녹음 중지 후 인식</string>
+    <string name="start_button">Start to speak</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="restart_button">Restart</string>
+    <string name="stop_button">Stop</string>
+    <string name="ui_button">Open Activity</string>
+    <string name="tts_button">Open TTS</string>
+    
+    <string name="radio_web">웹검색</string>
+    <string name="radio_local">지도</string>
+    <string name="radio_dictation">연속어</string>
+    <string name="radio_word">고립어</string>
+    
+    <string name="initial_words">현아\n수지\n태연</string>
+
+    
+    <string name="voice_select_title">음색선택</string>
+    <string name="man_read_calm">남자 낭독체</string>
+    <string name="woman_read_calm">여자 낭독체</string>
+    <string name="man_dialog_bright">남자 대화체</string>
+    <string name="woman_dialog_bright">여자 대화체</string>
+    <string name="speed_select_title">속도선택</string>
+    
+    <string name="noticalltoglle">Noticall 켜기</string>
+    <string name="advancedsetting">Advanced Settings</string>
+    <string name="server_summary">서버를 생성합니다.</string>
+    <string name="advancedsetting_summary">컨텐츠를 설정합니다.</string>
+    <string name="zerocontentssetting">1st Content Setting</string>
+    <string name="zerocontentssetting_summary">항상 실행되는 컨텐츠를 설정합니다.</string>
+    <string name="donotsetwifi">Wifi를 활성해 해야\r\n해당 기능이 사용 가능해 집니다.</string>
+    <string name="setwifi">Wifi에 연결해주세요.</string>
+   
+    <string name="stopnoticall">Noticall이 중지 되었습니다.</string>
+    <string name="startnoticall">Noticall이 시작 되었습니다.</string>
+    
+    <string name="stopserver">서버중지</string>
+    <string name="starserver">서버시작</string>
+    
+    <string name="setzerocontent">1순위 컨텐츠를 선택해주세요</string>
+    <string name="setfree">무료통화 시간과\r\n초기화 날짜를 입력해주세요.</string>
+    <string name="setUserTTS">재생될 문장을 적어주세요.</string>
+    
+    <string name="sound_setting">Sound Setting</string>
+    <string name="sound_setting_summary">TTS와 음량을 설정합니다.</string>
+    <string name="setSound">TTS와 음량을 설정합니다.</string>
+    <string name="volume_select_title">음량</string>
+    
+    <string name="ad_text">Advertise Setting</string>
+    <string name="ad_summary">광고를 듣습니다.</string>
+    
+    <string name="disable_music"> 뮤직컨텐츠를 사용할 수 없습니다.</string>
+    <string name="setsoundsetting">TTS와 음량을 설정합니다.</string>
+    
+    <string name="ongoingnoti">Noticall</string>
+    
+    <string name="em_text">Emergency Helper</string>
+    <string name="em_summary">응급상황시 문자전송을 합니다.</string>
+    
+    <string name="emergency_setting">응급 상황시 문자 설정</string>
+    
+    <string name="setWeather">날씨 위치 정보를 설정합니다.</string>
+    
+    
+    
+</resources>

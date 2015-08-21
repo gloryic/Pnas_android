@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:orientation="horizontal"
+        android:background="@color/setting_background">
+        
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.1"
+	        android:layout_gravity="center_vertical"
+	        android:background="@color/setting_background"
+	        android:orientation="vertical" >
+	        
+	        <TextView
+	            android:id="@+id/lab_title"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="left"
+	            android:layout_marginLeft="20dp"
+	            android:text="Pnas"
+	            android:textColor="@color/white"
+	            android:textSize="30sp" />
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="5dp"
+	        android:background="@color/setting_line_breaker"/>
+        
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.75"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/setting_button_margin_right">
+            
+            <ImageView
+                android:layout_width="@dimen/setting_button_width"
+                android:layout_height="@dimen/setting_button_height"
+                android:layout_weight="0.15"
+                android:layout_marginTop="@dimen/setting_image_margin_bottom"
+                android:layout_marginBottom="@dimen/setting_image_margin_bottom"
+                android:src="@drawable/ic_public_black_36dp" />
+            
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="10dp"
+                android:layout_weight="0.7"
+                android:layout_gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Server Mode"
+                    android:textColor="@color/setting_font_color"
+                    android:textSize="@dimen/setting_text_size" />
+
+                <TextView
+                    android:id="@+id/btn_server_summary"
+                    android:layout_marginTop="3sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/server_summary"
+                    android:textColor="@color/setting_font_color_summary"
+                    android:textSize="@dimen/setting_text_size_small" />
+            </LinearLayout>
+            
+ 			<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="0.15"
+                android:textSize="@dimen/setting_text_size" />
+
+            <ImageView
+                android:id="@+id/btn_server_toggle"
+                android:layout_marginTop="11dp"
+                android:layout_width="45dp"
+                android:layout_height="27dp"
+       	 		android:clickable="true"
+       	 		android:scaleType="fitCenter"
+       	 		android:background="@drawable/toggle_off"/>
+           
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            android:background="@color/setting_line_breaker" />
+</LinearLayout>
+</LinearLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue_pressed">#ff0099cc</color>
+    <color name="blue_normal">#ff33b5e5</color>
+    <color name="white">#ffffffff</color>
+    <color name="gray">#fff3f3f3</color>
+    <color name="dark_gray">#ffA0A0A0</color>
+    <color name="brown">#ff402c1c</color>
+    <color name="brown_pressed">#ff755c48</color> 
+    <color name="black">#ff000000</color>
+    
+    <color name="green">#ff4CCC86</color>
+    <color name="green_line">#ffbeffca</color>
+    <color name="green_shadow">#FF42b275</color>
+    
+    <color name="green_deep">#ff134f44</color>
+    <color name="green_light">#ffb7fed4</color>
+    <color name="green_light_shadow">#ff89be9e</color>
+    
+    <color name="group_cur">#ffdffddf</color>
+    <color name="group_parent">#ffdffddf</color>
+    <color name="group_child">#ffdffddf</color>
+    
+    <color name="red">#FFE64A45</color>
+    <color name="red_shadow">#FFc9403c</color>
+    
+    <color name="orange">#FFFF9900</color>
+    <color name="orange_shadow">#FFdf8500</color>
+    
+    <color name="dialog_back">#ffbbd0bb</color>
+    
+    <color name="buttonColor">#ff5696BC</color>
+    <color name="buttonColor_shadow">#ff2F5168</color>
+    
+    <color name="button_pressed">#99FFFFFF</color>
+    
+    <color name="setting_line_breaker">#99EBEDEF</color>
+    <color name="setting_font_color">#ff000000</color>
+    <color name="setting_font_color_summary">#ffA0A0A0</color>
+    <color name="setting_background">#ff336699</color>
+    
+    <color name="disabletransparent">#ffE8E8E8</color>
+   
+    <color name="transparentbackground">#00000000</color>
+    <color name="dimbackground">#80A0A0A0</color>
+    <color name="splitbar_color">#ff313131</color>
+    
+</resources>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".Dbg" >
+    
+    <LinearLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="start" />
+		
+		    <Button
+		        android:id="@+id/button2"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="stop"/>
+		    
+		    <Button
+		        android:id="@+id/button3"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="view Graph"/>
+		    
+		</LinearLayout>
+		
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button4"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="sever_start" />
+		
+		    <Button
+		        android:id="@+id/button5"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="sever_stop"/>
+		    
+		    <Button
+		        android:id="@+id/button6"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="Music"/>
+		    
+		</LinearLayout>
+		
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button7"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="xml" />
+		
+		    <Button
+		        android:id="@+id/button8"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="DSP"/>
+		    
+		    <Button
+		        android:id="@+id/button9"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="TTS"/>
+		    
+		</LinearLayout>
+		
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button10"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="Calendar" />
+		
+		    <Button
+		        android:id="@+id/button11"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="eHelper"/>
+		    
+		    <Button
+		        android:id="@+id/button12"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="callLog"/>
+		    
+		</LinearLayout>
+		
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button13"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="setting" />
+		
+		    <Button
+		        android:id="@+id/button14"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="execute"/>
+		    
+		    <Button
+		        android:id="@+id/button15"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="weather"/>
+		    
+		</LinearLayout>
+		
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button16"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:textSize="12sp"
+		        android:layout_weight="1.0"
+		        android:text="contentsStop" />
+		
+		    <Button
+		        android:id="@+id/button17"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="next"/>
+		    
+		    <Button
+		        android:id="@+id/button18"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="showContents"/>
+		    
+		</LinearLayout>
+		
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+    
+		    <Button
+		        android:id="@+id/button19"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="button19" />
+		
+		    <Button
+		        android:id="@+id/button20"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="button20"/>
+		    
+		    <Button
+		        android:id="@+id/button21"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1.0"
+		        android:text="button21"/>
+		    
+		</LinearLayout>
+						
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+			<TextView
+		            android:id="@+id/selectMusic"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="Hello\n" />
+		</LinearLayout>
+
+		<ScrollView
+		    android:id="@+id/SCROLLER_ID"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:fillViewport="true"
+		    android:scrollbars="vertical" >
+
+		    <TextView
+		        android:id="@+id/dbgWindow"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1.0"
+		        android:text="LOG\n" />
+		</ScrollView>
+
+</LinearLayout>
+
+</RelativeLayout>

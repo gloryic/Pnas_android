@@ -104,22 +104,30 @@ public class FileManager {
     }
 
 
-    public void  fileList2Array(String[] fileList, CustomList mAdapter, ArrayList<String> mArFile, String root, String path) {
+    public void  fileList2Array(String[] fileList, CustomList mAdapter, ArrayList<String> mArFile, ArrayList<String> mArFullPath,
+                                String root, String path) {
         if (fileList == null)
             return;
         mArFile.clear();
         mArFile.add("");
 
+        mArFullPath.clear();
+        mArFullPath.add("");
+
         if (root.equals(path)) {
             for (int i = 0; i < initList.length; i++) {
                 mArFile.add(initList[i]);
+                mArFullPath.add(root+"/"+initList[i]);
             }
         } else {
-            if (root.length() < path.length())
+            if (root.length() < path.length()) {
                 mArFile.add("..");
+                mArFullPath.add(path);
+            }
 
             for (int i = 0; i < fileList.length; i++) {
                 mArFile.add(fileList[i]);
+                mArFullPath.add(path+"/"+fileList[i]);
             }
         }
         mAdapter.notifyDataSetChanged();

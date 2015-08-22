@@ -22,7 +22,7 @@ public class CustomList extends ArrayAdapter<String> {
     private final ArrayList<String> web;
     private final Integer imageId;
 
-    public CustomList(Activity context,ArrayList<String> web, Integer imageId) {
+    public CustomList(Activity context, ArrayList<String> web, Integer imageId) {
         super(context, R.layout.list_single, web);
         this.context = context;
         this.web = web;

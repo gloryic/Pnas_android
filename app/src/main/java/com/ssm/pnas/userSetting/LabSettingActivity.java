@@ -166,7 +166,7 @@ public class LabSettingActivity extends Activity implements OnClickListener {
 		Log.i("log", "userSetting resume");
 
 		//TODO test
-		String code = HashIndex.getInstance().generateCode("/test.txt");
+		String code = HashIndex.getInstance().generateCode("/Music");
 		Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
 
 		super.onResume();

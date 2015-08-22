@@ -24,13 +24,13 @@ public class Httpd
     private volatile static Httpd instance = null; 
     private Context mContext;
     private static String TAG = "Httpd";
+
     public static Httpd getInstance(Context mContext) {
 		synchronized (Httpd.class) {
 		if (null == instance) {
 				instance = new Httpd(mContext);
 			}
 		}
-		
 		instance.mContext = mContext;
 		return instance;
 	}
@@ -52,8 +52,34 @@ public class Httpd
     }
 
 	public void stop(){
-		if (server != null)
-			server.stop();
+		if (server != null) server.stop();
+	}
+
+	/**
+	 * hash code를 사용해서 서브 파일 경로를 가져온다.
+	 * 루트 경로는 sd card의 루트이다.
+	 * */
+	public String getFilePathFromHash(String code){
+		return HashIndex.getInstance().getPathFromHash(code);
+	}
+
+	/**
+	 * file의 전체 경로를 가져온다.
+	 * */
+	public String getFilePath(String code){
+//		String ext = Environment.getExternalStorageState();
+//		String filePath = null;
+//		if (ext.equals(Environment.MEDIA_MOUNTED)) {
+//			filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//			filePath += getFilePathFromHash(code);
+//		}
+//		return filePath;
+
+		String ext = Environment.getExternalStorageState();
+		if (ext.equals(Environment.MEDIA_MOUNTED)) {
+			return getFilePathFromHash(code);
+		}
+		return null;
 	}
 
     private class WebServer extends NanoHTTPD {
@@ -63,11 +89,11 @@ public class Httpd
         }
         public String mCode;
 
-        public boolean haveDot(String uri){
-        	return uri.indexOf(".") == -1 ? false : true;
-        }
+//        public boolean haveDot(String uri){
+//        	return uri.indexOf(".") == -1 ? false : true;
+//        }
 
-		public boolean isInBoundary(String strCode){
+		private boolean isInBoundary(String strCode){
 			try{
 				int code = Integer.parseInt(strCode);
 				if(0 < code && HashIndex.MAX_NUM > code){
@@ -80,30 +106,9 @@ public class Httpd
 				}
 			}
 			catch(NumberFormatException e) {
-				Log.d("httpd",e.getMessage());
+				Log.d("WebServer",e.getMessage());
 				return false;
 			}
-		}
-
-		/**
-		 * hash code를 사용해서 서브 파일 경로를 가져온다.
-		 * 루트 경로는 sd card의 루트이다.
-		 * */
-		public String getSubFilePath(String code){
-			return HashIndex.getInstance().getPathFromHash(code);
-		}
-
-		/**
-		 * file의 전체 경로를 가져온다.
-		 * */
-		public String getFilePath(String code){
-			String ext = Environment.getExternalStorageState();
-			String filePath = null;
-			if (ext.equals(Environment.MEDIA_MOUNTED)) {
-				filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-				filePath += getSubFilePath(code);
-			}
-			return filePath;
 		}
 
         @Override

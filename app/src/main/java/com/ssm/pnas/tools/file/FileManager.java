@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.R;
 import com.ssm.pnas.userSetting.CustomList;
+import com.ssm.pnas.userSetting.ListRow;
 import com.ssm.pnas.userSetting.SwipeRefresh;
 
 import java.io.File;
@@ -66,8 +67,6 @@ public class FileManager {
         if (fileRoot.isDirectory() == false)
         {
             /**
-             *
-             *
              * 실행부분
              */
             /*if(isMusicFile(fileRoot))
@@ -104,22 +103,25 @@ public class FileManager {
     }
 
 
-    public void  fileList2Array(String[] fileList, CustomList mAdapter, ArrayList<String> mArFile, String root, String path) {
+    public void  fileList2Array(String[] fileList, CustomList mAdapter, ArrayList<ListRow> mArFile,
+                                String root, String path) {
         if (fileList == null)
             return;
         mArFile.clear();
-        mArFile.add("");
+        mArFile.add(new ListRow("","",""));
+
 
         if (root.equals(path)) {
             for (int i = 0; i < initList.length; i++) {
-                mArFile.add(initList[i]);
+                mArFile.add(new ListRow(initList[i],root+"/"+initList[i],""));
             }
         } else {
-            if (root.length() < path.length())
-                mArFile.add("..");
+            if (root.length() < path.length()) {
+                mArFile.add(new ListRow("..",path,""));
+            }
 
             for (int i = 0; i < fileList.length; i++) {
-                mArFile.add(fileList[i]);
+                mArFile.add(new ListRow(fileList[i],path+"/"+fileList[i],""));
             }
         }
         mAdapter.notifyDataSetChanged();

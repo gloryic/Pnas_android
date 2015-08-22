@@ -1,6 +1,16 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.Fragment;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -38,8 +50,8 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
     private Handler mTimerHandler;
     private TimerTask mTask;
     private Timer mTimer;
-
-
+    private Context mContext;
+    private ShareDialog shareDialog;
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -47,7 +59,8 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
     private String ipAddr;
 
     private CustomList mAdapter ;
-    private ArrayList<String> mArFile;
+
+    private ArrayList<ListRow> mArFile;
     private String root = "";
     private String path = "";
 
@@ -74,7 +87,6 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
         initFolder();
         initListView();
         FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,root,path);
@@ -152,12 +164,14 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void initListView() {
 
-        mArFile = new ArrayList<String>();
+        mArFile = new ArrayList<ListRow>();
         mAdapter = new CustomList(getActivity(), mArFile);
         mListView=(SwipeMenuListView)getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mListView.setAdapter(mAdapter);
+
         mListView.setOnItemClickListener(this);
+
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
             @Override
@@ -168,14 +182,30 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
             }
 
             @Override
-            public void onSwipeEnd(int position) {
+            public void onSwipeEndWithDx(int position, float dx) {
                 // swipe end
+                if(position < 0) return;
                 Log.d(TAG, "SwipeEnd");
+                // show dialog
+                if(dx > 500){
+                    mListView.closeMenu();
+                    shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position));
+                    shareDialog.show();
+                }else{
+                    mListView.smoothCloseMenu();
+                }
                 mSwipeRefreshLayout.setEnabled(true);
+            }
+
+            @Override
+            public boolean checkPosition(int position){
+                ListRow listRow = mAdapter.getItem(position);
+                Log.d(TAG, listRow.fileName);
+                if(listRow.fileName.equals("..")) return false;
+                else return true;
             }
         });
     }
-
 
     private void initFolder(){
 
@@ -219,7 +249,6 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 getResources().getDisplayMetrics());
     }
 
-
     public void notifyToAdaptor() {
         mAdapter.notifyDataSetChanged();
     }
@@ -230,10 +259,41 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
         if (position == 0) {
             return;
         }
-        String strItem = mArFile.get(position);
-        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path);
+
+        String strItem = mArFile.get(position).fileName;
+        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path)
+                ;
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
+        else
+        {
+            //is not directory
+            int pos = strPath.lastIndexOf(".");
+            String extensionName = strPath.substring(pos, strPath.length());
+            if(extensionName.equals(".jpg")) {
+                getThumbnail(strPath);
+            }
+        }
         FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
+    }
+
+    private Bitmap getThumbnail(String path){
+
+        Bitmap thumbBitmap = null;
+
+        thumbBitmap = BitmapFactory.decodeFile(path);
+
+        //Create a Dialog to display the thumbnail
+        AlertDialog.Builder thumbDialog = new AlertDialog.Builder(getActivity());
+        ImageView thumbView = new ImageView(getActivity());
+        thumbView.setImageBitmap(thumbBitmap);
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(thumbView);
+        thumbDialog.setView(layout);
+        thumbDialog.show();
+
+
+    return thumbBitmap;
     }
 }

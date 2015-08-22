@@ -2,7 +2,9 @@ package com.ssm.pnas;
 
 
 import com.ssm.pnas.nanohttpd.Httpd;
+import com.ssm.pnas.network.NetworkManager;
 import com.ssm.pnas.tools.device.Devices;
+import com.ssm.pnas.tools.pbox.PboxList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -136,6 +138,9 @@ public class Dbg extends Activity implements OnClickListener {
 			switch(v.getId()){
 			case com.ssm.pnas.R.id.button1:
 				Log.i("Noti", "Start Recording");
+
+				NetworkManager.getInstance().initialize(_context);
+				PboxList.getInstance().getPboxList();
 				break;
 			case com.ssm.pnas.R.id.button2:
 				Log.i("Noti", "Start Recording");
@@ -146,6 +151,7 @@ public class Dbg extends Activity implements OnClickListener {
 				Log.i("Noti", "Server Start");
 				if(getWifiIpAddress()!=null){
 					Log(getWifiIpAddress()+":"+C.port);
+					C.localIP = getWifiIpAddress();
 					httpd.start();
 				}
 				break;

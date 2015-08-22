@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ssm.pnas.C;
@@ -83,16 +84,12 @@ public class CustomList extends ArrayAdapter<ListRow> {
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
         if(position != 0){
-
             holder.iv_icon.setImageResource(selectImg(listRow.get(position).fileName,listRow.get(position).fileFullPath));
-
             holder.tv_name.setText(listRow.get(position).fileName);
             holder.tv_summary.setText(listRow.get(position).fileFullPath);
-
-
-
         }
         else{
+            holder.iv_root.setBackground(context.getResources().getDrawable(R.color.status_background));
             holder.iv_icon.setImageResource(R.drawable.ic_launcher);
             if(C.localIP != null) holder.tv_name.setText(C.localIP);
             else holder.tv_name.setText(context.getResources().getString(R.string.ip_is_null));
@@ -106,8 +103,10 @@ public class CustomList extends ArrayAdapter<ListRow> {
         ImageView iv_icon;
         TextView tv_name;
         TextView tv_summary;
+        RelativeLayout iv_root;
 
         public ViewHolder(View view) {
+            iv_root = (RelativeLayout) view.findViewById(R.id.iv_root);
             iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
             tv_summary = (TextView) view.findViewById(R.id.tv_summary);

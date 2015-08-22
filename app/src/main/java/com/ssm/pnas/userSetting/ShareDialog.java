@@ -33,7 +33,7 @@ public class ShareDialog extends AlertDialog.Builder {
         View dialogShareInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogShareInnerView);
 
-        pref = this.getContext().getSharedPreferences("pbox", Context.MODE_PRIVATE);
+        pref = this.getContext().getSharedPreferences("pboxShareList", Context.MODE_PRIVATE);
         file_name = (TextView) dialogShareInnerView.findViewById(R.id.file_name);
         file_storage = (TextView) dialogShareInnerView.findViewById(R.id.file_storage);
         file_full_path = (TextView) dialogShareInnerView.findViewById(R.id.file_full_path);
@@ -57,8 +57,12 @@ public class ShareDialog extends AlertDialog.Builder {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        //TODO test
-                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath).getCode();
+
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("code",code);
+                        editor.commit();
+
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
 

@@ -23,7 +23,8 @@ public class FileManager {
     private String movieRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getName();
     private String downLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getName();
     private String dcimLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getName();
-    public String[] initList = {musicRoot, movieRoot, downLoadRoot, dcimLoadRoot};
+    private String kakaoTalkDown = "KakaoTalkDownload";
+    public String[] initList = {musicRoot, movieRoot, downLoadRoot, dcimLoadRoot,kakaoTalkDown};
 
     private FileManager()
     {
@@ -93,20 +94,13 @@ public class FileManager {
         return fileList;
     }
 
-    public boolean isMusicFile(File fileRoot)
-    {
-        String str = fileRoot.toString();
-        int pos = str.lastIndexOf(".");
-        String extensionName = str.substring(pos, str.length());
-
-        return extensionName.equals(".mp3")||extensionName.equals(".wma") ? true : false;
-    }
 
 
     public void  fileList2Array(String[] fileList, CustomList mAdapter, ArrayList<ListRow> mArFile,
-                                String root, String path) {
+                                 String root, String path) {
         if (fileList == null)
             return;
+
         mArFile.clear();
         mArFile.add(new ListRow("","",""));
 
@@ -123,6 +117,20 @@ public class FileManager {
             for (int i = 0; i < fileList.length; i++) {
                 mArFile.add(new ListRow(fileList[i],path+"/"+fileList[i],""));
             }
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void  fileList2Array(ArrayList<ListRow> adapterList, CustomList mAdapter, ArrayList<ListRow> mArFile) {
+
+        if (mArFile == null)
+            return;
+
+        adapterList.clear();
+        adapterList.add(new ListRow("","",""));
+
+        for (int i = 0; i < mArFile.size(); i++) {
+            adapterList.add(mArFile.get(i));
         }
         mAdapter.notifyDataSetChanged();
     }

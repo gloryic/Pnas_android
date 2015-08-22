@@ -37,12 +37,12 @@ public class ShareDialog extends AlertDialog.Builder {
 
     private SharedPreferences pref;
     private Context mContext;
-    private String mFullPath;
+    private ListRow listRow;
 
-    public ShareDialog(Context context, Activity activity, String item) {
+    public ShareDialog(Context context, Activity activity, ListRow item) {
         super(context);
         mContext = context;
-        mFullPath = item;
+        listRow = item;
 
         View dialogSoundInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogSoundInnerView);
@@ -65,7 +65,7 @@ public class ShareDialog extends AlertDialog.Builder {
                     public void onClick(DialogInterface dialog, int which) {
 
                         //TODO test
-                        String code = HashIndex.getInstance().generateCode(mFullPath);
+                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
 

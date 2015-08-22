@@ -67,7 +67,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private String ipAddr;
     private CustomList mAdapter ;
 
-    private ArrayList<String> mArFile, mArFullPath;
+    private ArrayList<ListRow> mArFile;
     private String root = "";
     private String path = "";
 
@@ -88,7 +88,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mSwipeRefreshLayout.setOnRefreshListener(this);
         initFolder();
         initListView();
-        FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,mArFullPath,root,path);
+        FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,root,path);
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -162,10 +162,9 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     }
     private void initListView() {
 
-        mArFile = new ArrayList<String>();
-        mArFullPath = new ArrayList<String>();
+        mArFile = new ArrayList<ListRow>();
 
-        mAdapter = new CustomList(SwipeRefresh.this, mArFile,mArFullPath);
+        mAdapter = new CustomList(SwipeRefresh.this, mArFile);
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
@@ -186,7 +185,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
                 // show dialog
                 if(dx > 500){
-                    shareDialog = new ShareDialog(mContext, (SwipeRefresh)mContext, mArFullPath.get(position));
+                    shareDialog = new ShareDialog(mContext, (SwipeRefresh)mContext, mArFile.get(position));
                     shareDialog.show();
                 }
 
@@ -370,11 +369,11 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         if (position == 0) {
             return;
         }
-        String strItem = mArFile.get(position);
+        String strItem = mArFile.get(position).fileName;
         String strPath = FileManager.getInstance().getAbsolutePath(strItem,path);
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
-        FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,mArFullPath,root,strPath);
+        FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
     }
 
 

@@ -17,11 +17,10 @@ import java.util.ArrayList;
 /**
  * Created by kangSI on 2015-08-22.
  */
-public class CustomList extends ArrayAdapter<String> {
+public class CustomList extends ArrayAdapter<ListRow> {
 
     private final Activity context;
-    private final ArrayList<String> fileName;
-    private final ArrayList<String> fullPath;
+    private final ArrayList<ListRow> listRow;
 
     enum imgType {dotdot,folder,music,movie,img,doc,hwp,none}
     Integer imgArr[] = new Integer[10];
@@ -67,12 +66,11 @@ public class CustomList extends ArrayAdapter<String> {
 
     }
 
-    public CustomList(Activity context,ArrayList<String> fileName ,ArrayList<String> fullPath) {
-        super(context, R.layout.list_single, fileName);
+    public CustomList(Activity context,ArrayList<ListRow> lr) {
+        super(context, R.layout.list_single, lr);
         setImgArr();
         this.context = context;
-        this.fileName = fileName;
-        this.fullPath = fullPath;
+        this.listRow = lr;
     }
 
     @Override
@@ -86,10 +84,10 @@ public class CustomList extends ArrayAdapter<String> {
 
         if(position != 0){
 
-            holder.iv_icon.setImageResource(selectImg(fileName.get(position),fullPath.get(position)));
+            holder.iv_icon.setImageResource(selectImg(listRow.get(position).fileName,listRow.get(position).fileFullPath));
 
-            holder.tv_name.setText(fileName.get(position));
-            holder.tv_summary.setText(fullPath.get(position));
+            holder.tv_name.setText(listRow.get(position).fileName);
+            holder.tv_summary.setText(listRow.get(position).fileFullPath);
 
 
 

@@ -1,5 +1,7 @@
 package com.ssm.pnas.nanohttpd;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +13,12 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ssm.pnas.C;
 import com.ssm.pnas.Dbg;
+import com.ssm.pnas.tools.file.FileManager;
 
 public class WebManager {
 	
@@ -55,6 +59,18 @@ public class WebManager {
 			return "{\"status\":\"ERROR\",\"message\":\"NOT SUPPORT METHOD\"}";
 	}
 
+    public boolean isInBoundary(String strCode){
+        try{
+            int code = Integer.parseInt(strCode);
+            if(0 < code && HashIndex.MAX_NUM > code) return true;
+            else return false;
+        }
+        catch(NumberFormatException e) {
+            Log.d("httpd",e.getMessage());
+            return false;
+        }
+    }
+
 	public String getParams(Map<String,String> parms, String key, String defaultValue){
 		String value = parms.get(key);
 		return value != null ? value : defaultValue;
@@ -88,6 +104,42 @@ public class WebManager {
 
             result.put("responseData",subResult);
         	return result.toString().replaceAll("\\\\","");
+        }
+        else if(splitUri.length > 3 && splitUri[2].equals("filelist") && isInBoundary(splitUri[3])){
+            /**
+             * URI : /api/filelist/0012
+             * DESC : 0012를 키로 갖는 값의 하위 디레토리 or 파일 리스트를 jsonArr로 반환한다.
+             * */
+
+            String code = splitUri[3];
+
+            //TODO
+            Httpd httpd = Httpd.getInstance(mContext);
+
+            String fullPath = httpd.getFilePath(code);
+            String[] pathArr = fullPath.split("/");
+            String curPath = pathArr[pathArr.length-1];
+
+            Log.d(TAG, fullPath);
+
+            result.put("status", "200");
+            JSONObject subResult = new JSONObject();
+            JSONObject fileListJson = new JSONObject();
+            JSONObject curfile = new JSONObject();
+
+            String [] list = FileManager.getInstance().getFileList(fullPath); //TODO
+
+            curfile.put(code,curPath);
+
+            for(String one : list){
+                one = fullPath.concat("/").concat(one);
+                fileListJson.put(HashIndex.getInstance().generateCode(one), one);
+            }
+            subResult.put("curfile",curfile);
+            subResult.put("filelist",fileListJson);
+
+            result.put("responseData",subResult);
+            return result.toString().replaceAll("\\\\","");
         }
         else{
         	Log.d(TAG, "ERROR : Wrong Method");

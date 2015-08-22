@@ -42,7 +42,7 @@ public class HashIndex {
     }
 
     /**
-     * 10,000개가 꽉찼을때 -1반환한다.
+     * 10,000개가 꽉찼을때 null반환한다.
      * */
     public String generateCode(String path){
         if(hashTable.size() == MAX_NUM) return null;

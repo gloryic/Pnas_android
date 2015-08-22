@@ -37,6 +37,7 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
+import com.ssm.pnas.nanohttpd.HashIndex;
 import com.ssm.pnas.nanohttpd.Httpd;
 import com.ssm.pnas.tools.file.FileManager;
 
@@ -373,6 +374,17 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         if (mTimer != null)
             mTimer.cancel();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i("log", "userSetting resume");
+
+        //TODO test
+        String code = HashIndex.getInstance().generateCode(Environment.getExternalStorageDirectory().toString()+"/Music");
+        Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
+
+        super.onResume();
     }
 
 //    @Override

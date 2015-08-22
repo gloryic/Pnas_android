@@ -28,7 +28,7 @@ public class FileManager {
     {
     }
 
-    private static FileManager instance = null;
+    private volatile static FileManager instance = null;
 
     public static FileManager getInstance(){
         synchronized (FileManager.class){

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ssm.pnas.C;
 import com.ssm.pnas.Dbg;
+import com.ssm.pnas.tools.file.FileManager;
 
 public class WebManager {
 	
@@ -126,15 +127,15 @@ public class WebManager {
             JSONObject fileListJson = new JSONObject();
             JSONObject curfile = new JSONObject();
 
-            String [] list = {"1"}; //TODO
+            String [] list = FileManager.getInstance().getFileList(fullPath); //TODO
 
             curfile.put(code,curPath);
 
             for(String one : list){
-                Log.d(TAG, one);
-                fileListJson.put(HashIndex.getInstance().generateCode(one), one); //"emulater/0/test.txt" 완전 full path
+                one = fullPath.concat("/").concat(one);
+                fileListJson.put(HashIndex.getInstance().generateCode(one), one);
             }
-            subResult.put("curfile",fileListJson);
+            subResult.put("curfile",curfile);
             subResult.put("filelist",fileListJson);
 
             result.put("responseData",subResult);

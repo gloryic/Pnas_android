@@ -59,14 +59,14 @@ public class Httpd
 	 * hash code를 사용해서 서브 파일 경로를 가져온다.
 	 * 루트 경로는 sd card의 루트이다.
 	 * */
-	public String getFilePathFromHash(String code){
+	public FileItem getFilePathFromHash(String code){
 		return HashIndex.getInstance().getPathFromHash(code);
 	}
 
 	/**
 	 * file의 전체 경로를 가져온다.
 	 * */
-	public String getFilePath(String code){
+	public FileItem getFilePath(String code){
 //		String ext = Environment.getExternalStorageState();
 //		String filePath = null;
 //		if (ext.equals(Environment.MEDIA_MOUNTED)) {
@@ -135,7 +135,7 @@ public class Httpd
                 	}
 					else if(splitUri.length == 2 && isInBoundary(splitUri[1])){
 						//File Transfer Part
-						String fullPath = getFilePath(this.mCode);
+						String fullPath = getFilePath(this.mCode).getPath();
 						String[] pathArr = fullPath.split("/");
 						int lastIndex = pathArr.length-1;
 

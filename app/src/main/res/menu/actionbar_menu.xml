@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:pnas="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/toggle"
-        android:icon="@drawable/toggle_off"
-        android:title="@string/action_share"
-        pnas:showAsAction="ifRoom" />
+    <!--<item android:id="@+id/toggle"-->
+        <!--android:icon="@drawable/toggle_off"-->
+        <!--android:title="@string/action_share"-->
+        <!--pnas:showAsAction="ifRoom" />-->
+
+    <item
+        android:id="@+id/toggle"
+        android:title=""
+        pnas:showAsAction="always"
+        android:actionLayout="@layout/switch_layout"
+        android:actionViewClass="android.widget.Switch"
+        />
+
+    <!--android:actionLayout="@layout/switch_layout"-->
 </menu>

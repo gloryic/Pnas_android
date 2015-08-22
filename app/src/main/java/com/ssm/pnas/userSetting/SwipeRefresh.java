@@ -1,51 +1,30 @@
 package com.ssm.pnas.userSetting;
 
-import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.ResolveInfo;
+import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.ssm.pnas.C;
 import com.ssm.pnas.R;
-import com.ssm.pnas.nanohttpd.HashIndex;
-import com.ssm.pnas.nanohttpd.Httpd;
 import com.ssm.pnas.tools.file.FileManager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,7 +32,7 @@ import java.util.TimerTask;
  * Created by glory on 15. 8. 22..
  */
 
-public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
     private static String TAG = "MainActivity";
 
     private Handler mTimerHandler;
@@ -72,26 +51,28 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private String root = "";
     private String path = "";
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        ActionBar actionbar = getSupportActionBar();
-        if (actionbar != null)
-            actionbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pnas</font>"));
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.swipe_to_refresh, container, false);
+    }
 
-        setContentView(R.layout.drawer_layout);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        if (FileManager.getInstance().isSdCard(this) == false)
-            finish();
+        if (FileManager.getInstance().isSdCard(getActivity()) == false)
+            Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
+//            finish();
 
         root = Environment.getExternalStorageDirectory().toString();
         path = root;
-        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
+        mListView = (SwipeMenuListView) getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
-
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         initFolder();
@@ -104,7 +85,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             public void create(SwipeMenu menu) {
                 // create "open" item
                 SwipeMenuItem openItem = new SwipeMenuItem(
-                        getApplicationContext());
+                        getActivity().getApplicationContext());
                 // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
                         0xCE)));
@@ -121,7 +102,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getApplicationContext());
+                        getActivity().getApplicationContext());
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
@@ -162,17 +143,18 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                Toast.makeText(getApplicationContext(), position + " long click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), position + " long click", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
 
     }
+
     private void initListView() {
 
         mArFile = new ArrayList<String>();
-        mAdapter = new CustomList(SwipeRefresh.this, mArFile);
-        mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
+        mAdapter = new CustomList(getActivity(), mArFile);
+        mListView=(SwipeMenuListView)getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
@@ -203,38 +185,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             File file = new File(root+"/"+tmp);
             if(!file.isFile())
                 file.mkdir();
-        }
-    }
-
-    private void delete(ApplicationInfo item) {
-        // delete app
-        try {
-            Intent intent = new Intent(Intent.ACTION_DELETE);
-            intent.setData(Uri.fromParts("package", item.packageName, null));
-            startActivity(intent);
-        } catch (Exception e) {
-        }
-    }
-
-    private void open(ApplicationInfo item) {
-        // open app
-        Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
-        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        resolveIntent.setPackage(item.packageName);
-        List<ResolveInfo> resolveInfoList = getPackageManager()
-                .queryIntentActivities(resolveIntent, 0);
-        if (resolveInfoList != null && resolveInfoList.size() > 0) {
-            ResolveInfo resolveInfo = resolveInfoList.get(0);
-            String activityPackageName = resolveInfo.activityInfo.packageName;
-            String className = resolveInfo.activityInfo.name;
-
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            ComponentName componentName = new ComponentName(
-                    activityPackageName, className);
-
-            intent.setComponent(componentName);
-            startActivity(intent);
         }
     }
 
@@ -269,95 +219,10 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                 getResources().getDisplayMetrics());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actionbar_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+
+    public void notifyToAdaptor() {
+        mAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.toggle:
-                //Server isServerToggle
-                mAdapter.notifyDataSetChanged();
-
-                if (isServerToggle == 1) {
-                    item.setIcon(R.drawable.toggle_off);
-                    isServerToggle = 0;
-                    C.localIP = null;
-
-                    Httpd.getInstance(this).stop();
-                    Toast.makeText(this, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
-                } else if (isServerToggle == 0) {
-
-                    ipAddr = getWifiIpAddress();
-                    C.localIP = ipAddr;
-
-                    if (ipAddr != null) {
-                        item.setIcon(R.drawable.toggle_on);
-                        isServerToggle = 1;
-
-                        String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
-
-                        // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
-                        // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
-
-                        Httpd.getInstance(this).start();
-                        Toast.makeText(this, uri, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(this, getResources().getString(R.string.starserver), Toast.LENGTH_SHORT).show();
-
-                    } else
-                        Toast.makeText(this, getResources().getString(R.string.setwifi), Toast.LENGTH_SHORT).show();
-                }
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public String getWifiIpAddress() {
-        if(chkWifi()){
-            WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
-            @SuppressWarnings("deprecation")
-            String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-            return ip;
-        }
-        else
-            return null;
-    }
-
-    public boolean chkWifi(){
-
-        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        if (wifi.isWifiEnabled()){
-            return true;
-        }
-        else{
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("Confirm");
-            alertDialog.setMessage(getResources().getString(R.string.donotsetwifi));
-            alertDialog.setPositiveButton("yes",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
-                        }
-                    });
-            alertDialog.setNegativeButton("no",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            alertDialog.show();
-            return false;
-        }
-    }
-
 
 
     @Override
@@ -366,51 +231,9 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             return;
         }
         String strItem = mArFile.get(position);
-        String strPath = FileManager.getInstance().getAbsolutePath(strItem,path);
+        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path);
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
         FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
     }
-
-
-    // For Timer...
-    @Override
-    protected void onDestroy() {
-        if (mTimer != null)
-            mTimer.cancel();
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.i("log", "userSetting resume");
-
-        //TODO test
-        String code = HashIndex.getInstance().generateCode(Environment.getExternalStorageDirectory().toString()+"/Music");
-        Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
-
-        super.onResume();
-    }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_left) {
-//            mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-//            return true;
-//        }
-//        if (id == R.id.action_right) {
-//            mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

@@ -182,6 +182,14 @@ public class MainActivity extends ActionBarActivity {
         }
 
         switch (item.getItemId()) {
+
+            case 0:
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new PboxSwipeRefresh());
+                return true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }

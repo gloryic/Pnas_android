@@ -20,6 +20,7 @@ public class CustomList extends ArrayAdapter<String> {
     private final Activity context;
     private final ArrayList<String> web;
     private final Integer imageId;
+
     public CustomList(Activity context,ArrayList<String> web, Integer imageId) {
         super(context, R.layout.list_single, web);
         this.context = context;
@@ -29,19 +30,32 @@ public class CustomList extends ArrayAdapter<String> {
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = context.getLayoutInflater();
-            convertView = inflater.inflate(R.layout.item_list_app, null, true);
 
-            new ViewHolder(convertView);
+        if(position == 0){
+            if (convertView == null) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                convertView = inflater.inflate(R.layout.statusbar, null, true);
+                new ViewHolder(convertView);
+            }
+            //ViewHolder holder = (ViewHolder) convertView.getTag();
+            //holder.iv_icon.setImageResource(imageId);
+            //holder.iv_icon.setImageDrawable();
+            //holder.tv_name.setText(web.get(position));
+            return convertView;
         }
-        ViewHolder holder = (ViewHolder) convertView.getTag();
+        else{
+            if (convertView == null) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                convertView = inflater.inflate(R.layout.item_list_app, null, true);
+                new ViewHolder(convertView);
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        holder.iv_icon.setImageResource(imageId);
-        //holder.iv_icon.setImageDrawable();
-        holder.tv_name.setText(web.get(position));
-
-        return convertView;
+            holder.iv_icon.setImageResource(imageId);
+            //holder.iv_icon.setImageDrawable();
+            holder.tv_name.setText(web.get(position));
+            return convertView;
+        }
     }
 
     class ViewHolder {

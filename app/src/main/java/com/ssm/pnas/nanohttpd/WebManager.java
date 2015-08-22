@@ -1,6 +1,7 @@
 package com.ssm.pnas.nanohttpd;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.ssm.pnas.C;
 import com.ssm.pnas.Dbg;
 
 public class WebManager {
@@ -64,18 +66,33 @@ public class WebManager {
 	
 	public String getAPI(String[] splitUri, Map<String,String> parms, NanoHTTPD.Method method) throws Exception{
 		JSONObject result = new JSONObject();
+		//splitUri[1]은 api
 
-	    if(splitUri[2].equals("getWeather")) {
-            result.put("status", "OK");
+	    if(splitUri[2].equals("ping")) {
+            result.put("status", "200");
+            JSONObject subResult = new JSONObject();
+            subResult.put("ip", C.localIP);
+            result.put("responseData",subResult);
             return result.toString().replaceAll("\\\\", "");
         }
-        else if(splitUri[2].equals("userTTS")){
+        else if(splitUri[2].equals("viewall")){
+            result.put("status", "200");
+            JSONObject subResult = new JSONObject();
+            Map<String,String> selects = HashIndex.getInstance().getHashMap();
+
+            for(Map.Entry<String, String> entry : selects.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                subResult.put(key,value);
+            }
+
+            result.put("responseData",subResult);
         	return result.toString().replaceAll("\\\\","");
         }
         else{
         	Log.d(TAG, "ERROR : Wrong Method");
         	for(String oneMethod : splitUri){
-        		Dbg.Log(oneMethod);
+        		Log.d(TAG,oneMethod);
         	}
         	throw new Exception("METHOD ERROR");
         }

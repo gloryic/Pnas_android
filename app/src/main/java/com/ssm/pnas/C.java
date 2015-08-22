@@ -10,9 +10,10 @@ import android.location.Location;
 public class C {
 
 	static public boolean networkLogging = true;
-	static public int port = 8080;
-	//static public int port = 5050;
+	static public int port = 8206;
 	static public String baseURL = "http://210.118.74.97:3000";
+	static public String localIP;
+
 	//static public String baseURL = "http://210.118.74.107:5050";
 
 	/*Using SQLite by Constructor*/

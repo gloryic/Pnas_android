@@ -44,5 +44,6 @@
     <color name="transparentbackground">#00000000</color>
     <color name="dimbackground">#80A0A0A0</color>
     <color name="splitbar_color">#ff313131</color>
+    <color name="actionbar_text">#ffffffff</color>
     
 </resources>

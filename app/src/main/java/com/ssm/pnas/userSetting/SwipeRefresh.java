@@ -1,6 +1,5 @@
 package com.ssm.pnas.userSetting;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,11 +15,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.format.Formatter;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -28,6 +28,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -38,8 +40,7 @@ import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
 
-import java.io.
-        File;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -78,6 +79,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private String ipAddr;
 
     ArrayList<String> mArFile;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 
     enum imgType {dotdot,folder,music,movie,img,pic,doc}
     Integer imgArr[] = new Integer[10];
@@ -95,11 +98,24 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.swipe_to_refresh);
+
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null)
+            actionbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pnas</font>"));
+
+        setContentView(R.layout.drawer_layout);
 
         if (isSdCard() == false)
             finish();
 
+        String[] titles = {"Test1","Test2"};
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, titles));
 
 
         mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
@@ -110,6 +126,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         initFolder();
         initListView();
         fileList2Array(initList);
+
+
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -261,10 +279,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_good:
-                Toast.makeText(this, "Good Button is clicked", Toast.LENGTH_SHORT).show();
-                return true;
-
             case R.id.toggle:
                 //Server isServerToggle
                 if (isServerToggle == 1) {

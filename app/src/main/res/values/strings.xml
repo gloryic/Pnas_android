@@ -113,5 +113,6 @@
     <string name="action_example">Example action</string>
 
     <string name="ip_is_null">사용시작을 하세요</string>
+    <string name="setsharesetting">공유를 합니다.</string>
     
 </resources>

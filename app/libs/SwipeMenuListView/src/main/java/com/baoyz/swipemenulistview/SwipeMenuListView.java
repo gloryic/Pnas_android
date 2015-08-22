@@ -86,6 +86,12 @@ public class SwipeMenuListView extends ListView {
 		});
 	}
 
+	public void closeMenu(){
+		if (mTouchView != null) {
+			mTouchView.smoothCloseMenu();
+		}
+	}
+
 	public void setCloseInterpolator(Interpolator interpolator) {
 		mCloseInterpolator = interpolator;
 	}
@@ -101,6 +107,7 @@ public class SwipeMenuListView extends ListView {
 	public Interpolator getCloseInterpolator() {
 		return mCloseInterpolator;
 	}
+
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -172,6 +179,7 @@ public class SwipeMenuListView extends ListView {
 			}
 			break;
 		case MotionEvent.ACTION_UP:
+			float _dx = Math.abs((ev.getX() - mDownX));
 			if (mTouchState == TOUCH_STATE_X) {
 				if (mTouchView != null) {
 					mTouchView.onSwipe(ev);
@@ -181,7 +189,7 @@ public class SwipeMenuListView extends ListView {
 					}
 				}
 				if (mOnSwipeListener != null) {
-					mOnSwipeListener.onSwipeEnd(mTouchPosition);
+					mOnSwipeListener.onSwipeEndWithDx(mTouchPosition,_dx);
 				}
 				ev.setAction(MotionEvent.ACTION_CANCEL);
 				super.onTouchEvent(ev);
@@ -232,8 +240,8 @@ public class SwipeMenuListView extends ListView {
 
 	public static interface OnSwipeListener {
 		void onSwipeStart(int position);
-
-		void onSwipeEnd(int position);
+		//void onSwipeEnd(int position);
+		void onSwipeEndWithDx(int position, float dx);
 	}
 
 	public void setSwipeDirection(int direction) {

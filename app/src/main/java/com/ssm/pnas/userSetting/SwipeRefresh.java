@@ -58,8 +58,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private Handler mTimerHandler;
     private TimerTask mTask;
     private Timer mTimer;
-
-
+    private Context mContext;
+    private ShareDialog shareDialog;
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -74,6 +74,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swipe_to_refresh);
+        mContext = this;
 
         if (FileManager.getInstance().isSdCard(this) == false)
             finish();
@@ -84,7 +85,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
         initFolder();
         initListView();
         FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,root,path);
@@ -164,7 +164,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mArFile = new ArrayList<String>();
         mAdapter = new CustomList(SwipeRefresh.this, mArFile);
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
-
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
@@ -177,9 +176,17 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             }
 
             @Override
-            public void onSwipeEnd(int position) {
+            public void onSwipeEndWithDx(int position, float dx) {
                 // swipe end
                 Log.d(TAG, "SwipeEnd");
+
+                // show dialog
+                if(dx > 500){
+                    shareDialog = new ShareDialog(mContext, (SwipeRefresh)mContext);
+                    shareDialog.show();
+                }
+
+                mListView.closeMenu();
                 mSwipeRefreshLayout.setEnabled(true);
             }
         });
@@ -296,7 +303,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                         item.setIcon(R.drawable.toggle_on);
                         isServerToggle = 1;
 
-                        String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
+                        String uri = ipAddr + ":" + C.port;
 
                         // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
                         // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -379,11 +386,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     protected void onResume() {
         Log.i("log", "userSetting resume");
-
-        //TODO test
-        String code = HashIndex.getInstance().generateCode(Environment.getExternalStorageDirectory().toString()+"/Music");
-        Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
-
         super.onResume();
     }
 

@@ -67,8 +67,6 @@ public class FileManager {
         if (fileRoot.isDirectory() == false)
         {
             /**
-             *
-             *
              * 실행부분
              */
             /*if(isMusicFile(fileRoot))

@@ -1,6 +1,8 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
         imgArr[imgType.dotdot.ordinal()] = R.drawable.android_arrow_back_pnas;
         imgArr[imgType.folder.ordinal()] = R.drawable.ic_folder_black_48dp_pnas;
         imgArr[imgType.music.ordinal()] = R.drawable.mp3_pnas;
+        imgArr[imgType.img.ordinal()] = R.drawable.ic_photo_size_select_actual_black_48dp_pnas;
         imgArr[imgType.none.ordinal()] = R.drawable.ic_insert_drive_file_black_48dp_pnas;
         imgArr[imgType.doc.ordinal()] = R.drawable.google_docs_pnas;
         imgArr[imgType.hwp.ordinal()]= R.drawable.unnamed_pnas;
@@ -49,11 +52,16 @@ public class CustomList extends ArrayAdapter<ListRow> {
         }
         else {
             int pos = fullPath.lastIndexOf(".");
+            if(pos==-1) return imgArr[imgType.none.ordinal()];
+
             String extensionName = fullPath.substring(pos, fullPath.length());
 
             if(extensionName.equals(".mp3")||extensionName.equals(".wma"))
             {
                 return imgArr[imgType.music.ordinal()];
+            }
+            else if(extensionName.equals(".jpg")){
+                return 77;
             }
             else if(extensionName.equals(".doc")||extensionName.equals(".docx")){
                 return imgArr[imgType.doc.ordinal()];
@@ -84,7 +92,18 @@ public class CustomList extends ArrayAdapter<ListRow> {
 
         if(position != 0){
 
-            holder.iv_icon.setImageResource(selectImg(listRow.get(position).fileName,listRow.get(position).fileFullPath));
+            int rid = selectImg(listRow.get(position).fileName, listRow.get(position).fileFullPath);
+            if(rid==77)
+            {
+                holder.iv_icon.setImageResource(imgArr[imgType.img.ordinal()]);
+                //Bitmap myBitmap = BitmapFactory.decodeFile(listRow.get(position).fileFullPath);
+                //holder.iv_icon.setImageBitmap(myBitmap);
+            }
+            else
+            {
+                holder.iv_icon.setImageResource(rid);
+            }
+
 
             holder.tv_name.setText(listRow.get(position).fileName);
             holder.tv_summary.setText(listRow.get(position).fileFullPath);
@@ -94,9 +113,14 @@ public class CustomList extends ArrayAdapter<ListRow> {
         }
         else{
             holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-            if(C.localIP != null) holder.tv_name.setText(C.localIP);
-            else holder.tv_name.setText(context.getResources().getString(R.string.ip_is_null));
-            holder.tv_summary.setVisibility(View.GONE);
+            if(C.localIP != null) {
+                holder.tv_name.setText(C.localIP);
+                holder.tv_summary.setText(context.getResources().getString(R.string.ip_is_not_null_m));
+            }
+            else {
+                holder.tv_name.setText(context.getResources().getString(R.string.ip_is_null));
+                holder.tv_summary.setText(context.getResources().getString(R.string.ip_is_null_m));
+            }
 
         }
         return convertView;
@@ -107,12 +131,16 @@ public class CustomList extends ArrayAdapter<ListRow> {
         TextView tv_name;
         TextView tv_summary;
 
+
         public ViewHolder(View view) {
             iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
             tv_summary = (TextView) view.findViewById(R.id.tv_summary);
+
             view.setTag(this);
         }
     }
+
+
 
 }

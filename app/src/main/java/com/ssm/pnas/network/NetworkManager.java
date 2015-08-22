@@ -58,7 +58,7 @@ public class NetworkManager {
             throw new IllegalStateException("Volley Request Queue is not initialized.");
         }
 		if (C.networkLogging) {
-			Log.e("network", "request: " + param.toURI());
+			Log.d("NetworkManager", "request: " + param.toURI());
 		}
 				
 		String url="";
@@ -72,7 +72,7 @@ public class NetworkManager {
 			jsonRequest = param.toJSonObject();
 		}
 		
-		Log.e("test", url);
+		Log.d("NetworkManager", url);
 		
 		JsonObjectRequest req = new JsonObjectRequest(method, url, jsonRequest, listener, errorListener);
 		requestQueue.add(req);
@@ -83,7 +83,7 @@ public class NetworkManager {
             throw new IllegalStateException("Volley Request Queue is not initialized.");
         }
 		if (C.networkLogging) {
-			Log.e("network", "request: " + param.toURI());
+			Log.d("NetworkManager", "request: " + param.toURI());
 		}
 				
 		String url = param.toURI();
@@ -98,7 +98,7 @@ public class NetworkManager {
 		
 		//String query = URLEncoder.encode("apples oranges", "utf-8");
 		
-		Log.e("test", url);
+		Log.d("NetworkManager", url);
 		
 		JsonObjectRequest req = new JsonObjectRequest(method, url, jsonRequest, listener, errorListener){
 			/**Setup Header**/
@@ -118,7 +118,7 @@ public class NetworkManager {
             throw new IllegalStateException("Volley Request Queue is not initialized.");
         }
 		if (C.networkLogging) {
-			Log.e("network", "request: " + param.toURI());
+			Log.d("NetworkManager", "request: " + param.toURI());
 		}
 				
 		String url="";
@@ -132,7 +132,7 @@ public class NetworkManager {
 			jsonRequest = param.toJSonObject();
 		}
 		
-		Log.e("test", url);
+		Log.d("NetworkManager", url);
 		
 		JsonArrayRequest req = new JsonArrayRequest(url, listener, errorListener);
 		requestQueue.add(req);

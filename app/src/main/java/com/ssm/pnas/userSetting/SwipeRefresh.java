@@ -1,19 +1,27 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.format.Formatter;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,9 +34,12 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.ssm.pnas.C;
 import com.ssm.pnas.R;
+import com.ssm.pnas.nanohttpd.Httpd;
 
-import java.io.File;
+import java.io.
+        File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -62,6 +73,10 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     String root = "";
     String path = "";
 
+
+    private int isServerToggle;
+    private String ipAddr;
+
     ArrayList<String> mArFile;
 
     enum imgType {dotdot,folder,music,movie,img,pic,doc}
@@ -85,6 +100,10 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         if (isSdCard() == false)
             finish();
 
+
+
+        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
+
         root = Environment.getExternalStorageDirectory().toString();
         path = root;
         setImgArr();
@@ -94,9 +113,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
-
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -150,20 +166,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                         break;
                 }
                 return false;
-            }
-        });
-
-        // set SwipeListener
-        mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
             }
         });
 
@@ -262,14 +264,81 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             case R.id.action_good:
                 Toast.makeText(this, "Good Button is clicked", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.action_share:
-                Toast.makeText(this, "Share Button is clicked", Toast.LENGTH_SHORT).show();
+
+            case R.id.toggle:
+                //Server isServerToggle
+                if (isServerToggle == 1) {
+                    item.setIcon(R.drawable.toggle_off);
+                    isServerToggle = 0;
+                    C.localIP = null;
+
+                    Httpd.getInstance(this).stop();
+                   // btn_server_summary.setText(getResources().getString(R.string.server_summary));
+                    Toast.makeText(this, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
+                } else if (isServerToggle == 0) {
+
+                    ipAddr = getWifiIpAddress();
+                    C.localIP = ipAddr;
+
+                    if (ipAddr != null) {
+                        item.setIcon(R.drawable.toggle_on);
+                        isServerToggle = 1;
+
+                        String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
+                       // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
+                       // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
+
+                        Httpd.getInstance(this).start();
+                        Toast.makeText(this, uri, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getResources().getString(R.string.starserver), Toast.LENGTH_SHORT).show();
+
+                    } else
+                        Toast.makeText(this, getResources().getString(R.string.setwifi), Toast.LENGTH_SHORT).show();
+                }
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    public String getWifiIpAddress() {
+        if(chkWifi()){
+            WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+            @SuppressWarnings("deprecation")
+            String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+            return ip;
+        }
+        else
+            return null;
+    }
+
+    public boolean chkWifi(){
+
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()){
+            return true;
+        }
+        else{
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Confirm");
+            alertDialog.setMessage(getResources().getString(R.string.donotsetwifi));
+            alertDialog.setPositiveButton("yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                        }
+                    });
+            alertDialog.setNegativeButton("no",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            alertDialog.show();
+            return false;
+        }
+    }
 
     public void initFolder(){
 
@@ -286,17 +355,32 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mArFile = new ArrayList<String>();
 
         mAdapter = new CustomList(SwipeRefresh.this, mArFile, imgArr[imgType.folder.ordinal()]);
-
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
+
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+        mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+                Log.d(TAG, "SwipeStart");
+                mSwipeRefreshLayout.setEnabled(false);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+                Log.d(TAG, "SwipeEnd");
+                mSwipeRefreshLayout.setEnabled(true);
+            }
+        });
     }
 
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
         String strItem = mArFile.get(position);
         String strPath = getAbsolutePath(strItem);
-
         String[] fileList = getFileList(strPath);
         fileList2Array(fileList);
     }

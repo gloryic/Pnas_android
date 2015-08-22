@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
+import com.ssm.pnas.nanohttpd.HashIndex;
 import com.ssm.pnas.nanohttpd.Httpd;
 
 public class LabSettingActivity extends Activity implements OnClickListener {
@@ -97,6 +98,7 @@ public class LabSettingActivity extends Activity implements OnClickListener {
 				if (isServerToggle == 1) {
 					btn_server_toggle.setBackgroundResource(R.drawable.toggle_off);
 					isServerToggle = 0;
+					C.localIP = null;
 
 					Httpd.getInstance(context).stop();
 					btn_server_summary.setText(getResources().getString(R.string.server_summary));
@@ -104,6 +106,8 @@ public class LabSettingActivity extends Activity implements OnClickListener {
 				} else if (isServerToggle == 0) {
 
 					ipAddr = getWifiIpAddress();
+					C.localIP = ipAddr;
+
 					if (ipAddr != null) {
 
 						btn_server_toggle.setBackgroundResource(R.drawable.toggle_on);
@@ -115,6 +119,8 @@ public class LabSettingActivity extends Activity implements OnClickListener {
 
 						Httpd.getInstance(context).start();
 						Toast.makeText(this, getResources().getString(R.string.starserver), Toast.LENGTH_SHORT).show();
+
+
 					} else
 						Toast.makeText(this, getResources().getString(R.string.setwifi), Toast.LENGTH_SHORT).show();
 				}
@@ -158,6 +164,11 @@ public class LabSettingActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		Log.i("log", "userSetting resume");
+
+		//TODO test
+		String code = HashIndex.getInstance().generateCode("/test.txt");
+		Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
+
 		super.onResume();
 	}	
 }

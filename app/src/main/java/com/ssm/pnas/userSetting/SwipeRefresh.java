@@ -454,6 +454,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         if (fileList == null)
             return;
         mArFile.clear();
+        mArFile.add("");
 
         if (root.equals(path)) {
             for (int i = 0; i < initList.length; i++) {
@@ -467,7 +468,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                 mArFile.add(fileList[i]);
             }
         }
-
         mAdapter.notifyDataSetChanged();
     }
 

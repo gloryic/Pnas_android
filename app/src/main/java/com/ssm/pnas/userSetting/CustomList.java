@@ -34,7 +34,7 @@ public class CustomList extends ArrayAdapter<String> {
         if(position == 0){
             if (convertView == null) {
                 LayoutInflater inflater = context.getLayoutInflater();
-                convertView = inflater.inflate(R.layout.item_list_app, null, true);
+                convertView = inflater.inflate(R.layout.statusbar, null, true);
                 new ViewHolder(convertView);
             }
             //ViewHolder holder = (ViewHolder) convertView.getTag();

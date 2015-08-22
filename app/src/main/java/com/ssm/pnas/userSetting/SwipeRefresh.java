@@ -1,9 +1,6 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Environment;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -12,26 +9,20 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
@@ -39,7 +30,6 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -57,8 +47,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private Timer mTimer;
 
     //private ArrayAdapter mAdapter;
-    private List<ApplicationInfo> mAppList;
-    private AppAdapter mAdapter;
+    private CustomList mAdapter;
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -73,8 +62,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     String root = "";
     String path = "";
 
-    TextView mTextMsg;
-    ListView mListFile;
+//    ListView mListFile;
     ArrayList<String> mArFile;
 
     @Override
@@ -91,22 +79,16 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
         root = Environment.getExternalStorageDirectory().toString();
         path = root;
-        initFolder();
 
+        initFolder();
         initListView();
         fileList2Array(initList);
-
-
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mAppList = getPackageManager().getInstalledApplications(0);
-
         mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
 
-        mAdapter = new AppAdapter();
-        mListView.setAdapter(mAdapter);
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -150,17 +132,13 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                ApplicationInfo item = mAppList.get(position);
                 switch (index) {
                     case 0:
                         // open
-                        open(item);
                         break;
                     case 1:
                         // delete
 //					delete(item);
-                        mAppList.remove(position);
-                        mAdapter.notifyDataSetChanged();
                         break;
                 }
                 return false;
@@ -256,49 +234,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mTimer.schedule(mTask, 2000);
     }
 
-    class AppAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return mAppList.size();
-        }
-
-        @Override
-        public ApplicationInfo getItem(int position) {
-            return mAppList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = View.inflate(getApplicationContext(),
-                        R.layout.item_list_app, null);
-                new ViewHolder(convertView);
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            ApplicationInfo item = getItem(position);
-            holder.iv_icon.setImageDrawable(item.loadIcon(getPackageManager()));
-            holder.tv_name.setText(item.loadLabel(getPackageManager()));
-            return convertView;
-        }
-
-        class ViewHolder {
-            ImageView iv_icon;
-            TextView tv_name;
-
-            public ViewHolder(View view) {
-                iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
-                tv_name = (TextView) view.findViewById(R.id.tv_name);
-                view.setTag(this);
-            }
-        }
-    }
-
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
@@ -342,13 +277,11 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     public void initListView() {
-
         mArFile = new ArrayList<String>();
-        CustomList adapter = new CustomList(SwipeRefresh.this, mArFile, R.drawable.next);
-        mListFile=(ListView)findViewById(R.id.activity_main_swipemenulistview);
-        mListFile.setAdapter(adapter);
-        mListFile.setOnItemClickListener((AdapterView.OnItemClickListener) this);
-
+        mAdapter = new CustomList(SwipeRefresh.this, mArFile, R.drawable.next);
+        mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
     }
 
     @Override
@@ -436,8 +369,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             }
         }
 
-        ArrayAdapter<?> adapter = (ArrayAdapter<?>) mListFile.getAdapter();
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     // For Timer...

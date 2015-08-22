@@ -28,16 +28,31 @@ public class CustomList extends ArrayAdapter<String> {
 
     }
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView= inflater.inflate(R.layout.list_single, null, true);
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            convertView = inflater.inflate(R.layout.item_list_app, null, true);
 
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-        txtTitle.setText(web.get(position));
-        imageView.setImageResource(imageId);
+            new ViewHolder(convertView);
+        }
+        ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        return rowView;
+        holder.iv_icon.setImageResource(imageId);
+        //holder.iv_icon.setImageDrawable();
+        holder.tv_name.setText(web.get(position));
+
+        return convertView;
+    }
+
+    class ViewHolder {
+        ImageView iv_icon;
+        TextView tv_name;
+
+        public ViewHolder(View view) {
+            iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
+            tv_name = (TextView) view.findViewById(R.id.tv_name);
+            view.setTag(this);
+        }
     }
 
 }

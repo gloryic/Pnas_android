@@ -96,6 +96,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
             if(rid==77)
             {
                 holder.iv_icon.setImageResource(imgArr[imgType.img.ordinal()]);
+                //holder.iv_root.setBackground(context.getResources().getDrawable(R.color.white));
                 //Bitmap myBitmap = BitmapFactory.decodeFile(listRow.get(position).fileFullPath);
                 //holder.iv_icon.setImageBitmap(myBitmap);
             }
@@ -107,7 +108,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
             holder.tv_summary.setText(listRow.get(position).fileFullPath);
         }
         else{
-            holder.iv_root.setBackground(context.getResources().getDrawable(R.color.status_background));
+            //holder.iv_root.setBackground(context.getResources().getDrawable(R.color.status_background));
             holder.iv_icon.setImageResource(R.drawable.ic_launcher);
             if(C.localIP != null) {
                 holder.tv_name.setText(C.localIP);

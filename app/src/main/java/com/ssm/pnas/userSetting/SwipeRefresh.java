@@ -277,6 +277,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
             case R.id.toggle:
                 //Server isServerToggle
+                mAdapter.notifyDataSetChanged();
+
                 if (isServerToggle == 1) {
                     item.setIcon(R.drawable.toggle_off);
                     isServerToggle = 0;
@@ -295,13 +297,12 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                         isServerToggle = 1;
 
                         String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
-                       // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
-                       // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
+                        // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
+                        // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
 
                         Httpd.getInstance(this).start();
                         Toast.makeText(this, uri, Toast.LENGTH_SHORT).show();
                         Toast.makeText(this, getResources().getString(R.string.starserver), Toast.LENGTH_SHORT).show();
-
                     } else
                         Toast.makeText(this, getResources().getString(R.string.setwifi), Toast.LENGTH_SHORT).show();
                 }

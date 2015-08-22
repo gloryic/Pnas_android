@@ -47,16 +47,16 @@
         android:paddingRight="20dp">
 
         <TextView
-            android:id="@+id/adJoinNameLabel"
+            android:id="@+id/file_name_lable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/setting_font_color"
-            android:text="이름"
+            android:text="파일이름"
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/adJoinNameText"
-            android:layout_below="@+id/adJoinNameLabel"
+            android:id="@+id/file_name"
+            android:layout_below="@+id/file_name_lable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -64,12 +64,12 @@
             android:paddingRight="12dp"
             android:textSize="18sp"
             android:maxLength="8"
-            android:text="이름"
+            android:text="파일이름"
             android:singleLine="true" />
 
         <TextView
-            android:id="@+id/adJoinMailLabel"
-            android:layout_below="@+id/adJoinNameText"
+            android:id="@+id/file_storage_label"
+            android:layout_below="@+id/file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/setting_font_color"
@@ -77,8 +77,8 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/adJoinMailText"
-            android:layout_below="@+id/adJoinMailLabel"
+            android:id="@+id/file_storage"
+            android:layout_below="@+id/file_storage_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -86,29 +86,7 @@
             android:paddingRight="12dp"
             android:textSize="18sp"
             android:maxLength="20"
-            android:text="이메일"
-            android:singleLine="true" />
-
-        <TextView
-            android:id="@+id/adJoinPWLabel"
-            android:layout_below="@+id/adJoinMailText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/setting_font_color"
-            android:text="비밀번호"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/adJoinPWText"
-            android:layout_below="@+id/adJoinPWLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:textSize="18sp"
-            android:text="비밀번호"
-            android:maxLength="20"
+            android:text="파일용량"
             android:singleLine="true" />
     </LinearLayout>
 

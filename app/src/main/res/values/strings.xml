@@ -62,7 +62,11 @@
     <string name="noticalltoglle">Noticall 켜기</string>
     <string name="advancedsetting">Advanced Settings</string>
     <string name="server_summary">서버를 생성합니다.</string>
+
+    <string name="tv_summary">해당 파일을 공유합니다.</string>
+
     <string name="advancedsetting_summary">컨텐츠를 설정합니다.</string>
+
     <string name="zerocontentssetting">1st Content Setting</string>
     <string name="zerocontentssetting_summary">항상 실행되는 컨텐츠를 설정합니다.</string>
     <string name="donotsetwifi">Wifi를 활성해 해야\r\n해당 기능이 사용 가능해 집니다.</string>

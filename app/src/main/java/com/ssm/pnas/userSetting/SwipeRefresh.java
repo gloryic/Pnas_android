@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.Formatter;
 import android.text.method.LinkMovementMethod;
@@ -36,6 +37,7 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
+import com.ssm.pnas.nanohttpd.HashIndex;
 import com.ssm.pnas.nanohttpd.Httpd;
 import com.ssm.pnas.tools.file.FileManager;
 
@@ -64,8 +66,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private int isServerToggle;
     private String ipAddr;
     private CustomList mAdapter ;
-    private ArrayList<String> mArFile, mArFullPath;
 
+    private ArrayList<String> mArFile, mArFullPath;
     private String root = "";
     private String path = "";
 
@@ -286,7 +288,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                     C.localIP = null;
 
                     Httpd.getInstance(this).stop();
-                   // btn_server_summary.setText(getResources().getString(R.string.server_summary));
                     Toast.makeText(this, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
                 } else if (isServerToggle == 0) {
 
@@ -298,12 +299,14 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                         isServerToggle = 1;
 
                         String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
+
                         // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
                         // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
 
                         Httpd.getInstance(this).start();
                         Toast.makeText(this, uri, Toast.LENGTH_SHORT).show();
                         Toast.makeText(this, getResources().getString(R.string.starserver), Toast.LENGTH_SHORT).show();
+
                     } else
                         Toast.makeText(this, getResources().getString(R.string.setwifi), Toast.LENGTH_SHORT).show();
                 }
@@ -372,6 +375,17 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         if (mTimer != null)
             mTimer.cancel();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i("log", "userSetting resume");
+
+        //TODO test
+        String code = HashIndex.getInstance().generateCode(Environment.getExternalStorageDirectory().toString()+"/Music");
+        Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
+
+        super.onResume();
     }
 
 //    @Override

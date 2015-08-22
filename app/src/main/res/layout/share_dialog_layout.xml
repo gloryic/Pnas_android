@@ -1,0 +1,109 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/adJoinLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".ADJoinLayout" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/setting_background"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/logoImage"
+            android:clickable="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="Go Share"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/adJoinWrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:id="@+id/file_name_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/setting_font_color"
+            android:text="파일이름"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_below="@+id/file_name_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textSize="18sp"
+            android:text="파일이름"/>
+
+        <TextView
+            android:id="@+id/file_full_path_label"
+            android:layout_below="@+id/file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/setting_font_color"
+            android:text="위치"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/file_full_path"
+            android:layout_below="@+id/file_full_path_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textSize="18sp"
+            android:text="위치"/>
+
+        <TextView
+            android:id="@+id/file_storage_label"
+            android:layout_below="@+id/file_full_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/setting_font_color"
+            android:text="파일용량"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/file_storage"
+            android:layout_below="@+id/file_storage_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textSize="18sp"
+            android:text="파일용량"/>
+    </LinearLayout>
+
+</LinearLayout>

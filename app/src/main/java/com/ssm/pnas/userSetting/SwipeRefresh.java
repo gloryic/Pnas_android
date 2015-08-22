@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -29,6 +31,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -365,9 +369,37 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         String strPath = FileManager.getInstance().getAbsolutePath(strItem,path);
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
+        else
+        {
+            //is not directory
+            int pos = strPath.lastIndexOf(".");
+            String extensionName = strPath.substring(pos, strPath.length());
+            if(extensionName.equals(".jpg")) {
+                getThumbnail(strPath);
+            }
+        }
         FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
     }
 
+    private Bitmap getThumbnail(String path){
+
+        Bitmap thumbBitmap = null;
+
+        thumbBitmap = BitmapFactory.decodeFile(path);
+
+        //Create a Dialog to display the thumbnail
+        AlertDialog.Builder thumbDialog = new AlertDialog.Builder(this);
+        ImageView thumbView = new ImageView(this);
+        thumbView.setImageBitmap(thumbBitmap);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.addView(thumbView);
+        thumbDialog.setView(layout);
+        thumbDialog.show();
+
+
+    return thumbBitmap;
+}
 
     // For Timer...
     @Override

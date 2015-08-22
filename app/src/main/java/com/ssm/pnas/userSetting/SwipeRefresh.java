@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -51,19 +50,32 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+
     String musicRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getName();
     String movieRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getName();
     String downLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getName();
     String dcimLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getName();
 
-    String[] initList = {musicRoot,movieRoot,downLoadRoot,dcimLoadRoot};
+    String[] initList = {musicRoot, movieRoot, downLoadRoot, dcimLoadRoot};
 
 
     String root = "";
     String path = "";
 
-//    ListView mListFile;
     ArrayList<String> mArFile;
+
+    enum imgType {dotdot,folder,music,movie,img,pic,doc}
+    Integer imgArr[] = new Integer[10];
+
+    void setImgArr()
+    {
+        imgArr[imgType.dotdot.ordinal()] = R.drawable.android_arrow_back_pnas;
+        imgArr[imgType.folder.ordinal()] = R.drawable.ic_folder_black_48dp_pnas;
+
+    }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,13 +85,9 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         if (isSdCard() == false)
             finish();
 
-        //파일 경로 text view
-        //mTextMsg = (TextView) findViewById(R.id.textMessage);
-        //mTextMsg.setText(mRoot);
-
         root = Environment.getExternalStorageDirectory().toString();
         path = root;
-
+        setImgArr();
         initFolder();
         initListView();
         fileList2Array(initList);
@@ -272,13 +280,13 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             if(!file.isFile())
                 file.mkdir();
         }
-
-
     }
 
     public void initListView() {
         mArFile = new ArrayList<String>();
-        mAdapter = new CustomList(SwipeRefresh.this, mArFile, R.drawable.next);
+
+        mAdapter = new CustomList(SwipeRefresh.this, mArFile, imgArr[imgType.folder.ordinal()]);
+
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
@@ -323,7 +331,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
              *
              * 실행부분
              */
-            if(isMusicFile(fileRoot))
+            /*if(isMusicFile(fileRoot))
             {
                 Intent intent = new Intent();
                 intent.putExtra("MusicFilePath", fileRoot.toString());
@@ -332,7 +340,11 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                 setResult(Activity.RESULT_OK,intent);
                 finish();
             }
-            else return null;
+            else*/
+            Toast toast = Toast.makeText(this,"메롱", Toast.LENGTH_SHORT);
+            toast.show();
+
+            return null;
 
         }
         path = strPath;

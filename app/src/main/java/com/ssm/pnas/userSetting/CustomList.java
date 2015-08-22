@@ -78,8 +78,11 @@ public class CustomList extends ArrayAdapter<String> {
 
         }
         else{
-            //holder.iv_icon.setImageResource(imageId);
-            holder.tv_name.setText(C.localIP);
+
+            if(C.localIP != null) holder.tv_name.setText(C.localIP);
+            else holder.tv_name.setText(context.getResources().getString(R.string.ip_is_null));
+            holder.tv_summary.setVisibility(View.GONE);
+
         }
         return convertView;
     }
@@ -87,10 +90,12 @@ public class CustomList extends ArrayAdapter<String> {
     class ViewHolder {
         ImageView iv_icon;
         TextView tv_name;
+        TextView tv_summary;
 
         public ViewHolder(View view) {
             iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
+            tv_summary = (TextView) view.findViewById(R.id.tv_summary);
             view.setTag(this);
         }
     }

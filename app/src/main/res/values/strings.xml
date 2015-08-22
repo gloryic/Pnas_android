@@ -111,7 +111,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
-    
-    
+
+    <string name="ip_is_null">사용시작을 하세요</string>
     
 </resources>

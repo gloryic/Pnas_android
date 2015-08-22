@@ -20,14 +20,43 @@ public class CustomList extends ArrayAdapter<String> {
 
     private final Activity context;
     private final ArrayList<String> web;
-    private final Integer imageId;
 
-    public CustomList(Activity context,ArrayList<String> web, Integer imageId) {
+    enum imgType {dotdot,folder,music,movie,img,pic,doc}
+    Integer imgArr[] = new Integer[10];
+
+    void setImgArr()
+    {
+        imgArr[imgType.dotdot.ordinal()] = R.drawable.android_arrow_back_pnas;
+        imgArr[imgType.folder.ordinal()] = R.drawable.ic_folder_black_48dp_pnas;
+        imgArr[imgType.music.ordinal()] = R.drawable.ic_folder_black_48dp_pnas;
+    }
+
+
+    int selectImg(String fileName)
+    {
+
+        if(fileName.equals("..")){
+            return imgArr[imgType.dotdot.ordinal()];
+        }
+
+        int pos = fileName.lastIndexOf(".");
+        String extensionName = fileName.substring(pos, fileName.length());
+
+        if(extensionName.equals(".mp3")||extensionName.equals(".wma"))
+        {
+            return imgArr[imgType.music.ordinal()];
+        }
+        //else if()
+        return imgArr[imgType.folder.ordinal()];
+
+        //return extensionName.equals(".mp3")||extensionName.equals(".wma") ? true : false;
+    }
+
+    public CustomList(Activity context,ArrayList<String> web) {
         super(context, R.layout.list_single, web);
+        setImgArr();
         this.context = context;
         this.web = web;
-        this.imageId = imageId;
-
     }
 
     @Override
@@ -40,13 +69,20 @@ public class CustomList extends ArrayAdapter<String> {
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
         if(position != 0){
-            holder.iv_icon.setImageResource(imageId);
+            //holder.iv_icon.setImageResource(imageId);
+
+
+
             holder.tv_name.setText(web.get(position));
+
+
         }
         else{
+
             if(C.localIP != null) holder.tv_name.setText(C.localIP);
             else holder.tv_name.setText(context.getResources().getString(R.string.ip_is_null));
             holder.tv_summary.setVisibility(View.GONE);
+
         }
         return convertView;
     }

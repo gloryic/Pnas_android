@@ -379,6 +379,9 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
+        if (position == 0) {
+            return;
+        }
         String strItem = mArFile.get(position);
         String strPath = getAbsolutePath(strItem);
         String[] fileList = getFileList(strPath);
@@ -387,7 +390,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
     public String getAbsolutePath(String strFolder) {
         String strPath;
-        if (strFolder == "..") {
+        if (strFolder.equals("..")) {
             int pos = path.lastIndexOf("/");
             strPath = path.substring(0, pos);
         } else

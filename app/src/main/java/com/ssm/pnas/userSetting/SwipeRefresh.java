@@ -37,6 +37,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
+import com.ssm.pnas.tools.file.FileManager;
 
 import java.io.
         File;
@@ -56,63 +57,36 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private TimerTask mTask;
     private Timer mTimer;
 
-    //private ArrayAdapter mAdapter;
-    private CustomList mAdapter;
+
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-
-    String musicRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getName();
-    String movieRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getName();
-    String downLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getName();
-    String dcimLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getName();
-
-    String[] initList = {musicRoot, movieRoot, downLoadRoot, dcimLoadRoot};
-
-
-    String root = "";
-    String path = "";
-
-
     private int isServerToggle;
     private String ipAddr;
+    private CustomList mAdapter ;
+    private ArrayList<String> mArFile;
 
-    ArrayList<String> mArFile;
-
-    enum imgType {dotdot,folder,music,movie,img,pic,doc}
-    Integer imgArr[] = new Integer[10];
-
-    void setImgArr()
-    {
-        imgArr[imgType.dotdot.ordinal()] = R.drawable.android_arrow_back_pnas;
-        imgArr[imgType.folder.ordinal()] = R.drawable.ic_folder_black_48dp_pnas;
-
-    }
-
-
-
+    private String root = "";
+    private String path = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swipe_to_refresh);
 
-        if (isSdCard() == false)
+        if (FileManager.getInstance().isSdCard(this) == false)
             finish();
-
-
-
-        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
 
         root = Environment.getExternalStorageDirectory().toString();
         path = root;
-        setImgArr();
-        initFolder();
-        initListView();
-        fileList2Array(initList);
+        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        initFolder();
+        initListView();
+        FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,root,path);
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -184,7 +158,43 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         });
 
     }
+    private void initListView() {
 
+        mArFile = new ArrayList<String>();
+        mAdapter = new CustomList(SwipeRefresh.this, mArFile);
+        mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
+
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
+        mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+                Log.d(TAG, "SwipeStart");
+                mSwipeRefreshLayout.setEnabled(false);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+                Log.d(TAG, "SwipeEnd");
+                mSwipeRefreshLayout.setEnabled(true);
+            }
+        });
+    }
+
+
+    private void initFolder(){
+
+        for(int i=0;i<FileManager.getInstance().initList.length;++i)
+        {
+            String tmp = FileManager.getInstance().initList[i];
+            File file = new File(root+"/"+tmp);
+            if(!file.isFile())
+                file.mkdir();
+        }
+    }
 
     private void delete(ApplicationInfo item) {
         // delete app
@@ -340,42 +350,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
-    public void initFolder(){
 
-        for(int i=0;i<initList.length;++i)
-        {
-            String tmp = initList[i];
-            File file = new File(root+"/"+tmp);
-            if(!file.isFile())
-                file.mkdir();
-        }
-    }
-
-    public void initListView() {
-        mArFile = new ArrayList<String>();
-
-        mAdapter = new CustomList(SwipeRefresh.this, mArFile, imgArr[imgType.folder.ordinal()]);
-        mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
-
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
-        mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-                Log.d(TAG, "SwipeStart");
-                mSwipeRefreshLayout.setEnabled(false);
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-                Log.d(TAG, "SwipeEnd");
-                mSwipeRefreshLayout.setEnabled(true);
-            }
-        });
-    }
 
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -383,93 +358,12 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             return;
         }
         String strItem = mArFile.get(position);
-        String strPath = getAbsolutePath(strItem);
-        String[] fileList = getFileList(strPath);
-        fileList2Array(fileList);
+        String strPath = FileManager.getInstance().getAbsolutePath(strItem,path);
+        String[] fileList = FileManager.getInstance().getFileList(strPath);
+        if(fileList!=null && fileList.length>=0) path = strPath;
+        FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
     }
 
-    public String getAbsolutePath(String strFolder) {
-        String strPath;
-        if (strFolder.equals("..")) {
-            int pos = path.lastIndexOf("/");
-            strPath = path.substring(0, pos);
-        } else
-            strPath = path + "/" + strFolder;
-        return strPath;
-    }
-
-    public boolean isSdCard() {
-        String ext = Environment.getExternalStorageState();
-        if (ext.equals(Environment.MEDIA_MOUNTED) == false) {
-            Toast.makeText(this, "SD Card does not exist", Toast.LENGTH_SHORT)
-                    .show();
-            return false;
-        }
-        return true;
-    }
-
-    public String[] getFileList(String strPath) {
-        File fileRoot = new File(strPath);
-
-        if (fileRoot.isDirectory() == false)
-        {
-            /**
-             *
-             *
-             * 실행부분
-             */
-            /*if(isMusicFile(fileRoot))
-            {
-                Intent intent = new Intent();
-                intent.putExtra("MusicFilePath", fileRoot.toString());
-
-
-                setResult(Activity.RESULT_OK,intent);
-                finish();
-            }
-            else*/
-            Toast toast = Toast.makeText(this,"메롱", Toast.LENGTH_SHORT);
-            toast.show();
-
-            return null;
-
-        }
-        path = strPath;
-        //mTextMsg.setText(mPath);
-        String[] fileList = fileRoot.list();
-        return fileList;
-    }
-
-    public boolean isMusicFile(File fileRoot)
-    {
-        String str = fileRoot.toString();
-        int pos = str.lastIndexOf(".");
-        String extensionName = str.substring(pos, str.length());
-
-        return extensionName.equals(".mp3")||extensionName.equals(".wma") ? true : false;
-    }
-
-
-    public void fileList2Array(String[] fileList) {
-        if (fileList == null)
-            return;
-        mArFile.clear();
-        mArFile.add("");
-
-        if (root.equals(path)) {
-            for (int i = 0; i < initList.length; i++) {
-                mArFile.add(initList[i]);
-            }
-        } else {
-            if (root.length() < path.length())
-                mArFile.add("..");
-
-            for (int i = 0; i < fileList.length; i++) {
-                mArFile.add(fileList[i]);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-    }
 
     // For Timer...
     @Override

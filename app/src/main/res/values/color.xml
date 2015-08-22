@@ -44,5 +44,7 @@
     <color name="transparentbackground">#00000000</color>
     <color name="dimbackground">#80A0A0A0</color>
     <color name="splitbar_color">#ff313131</color>
+
+    <color name="status_background">#ffadbcc3</color>
     
 </resources>

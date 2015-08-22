@@ -57,37 +57,53 @@
         <TextView
             android:id="@+id/file_name"
             android:layout_below="@+id/file_name_lable"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:textSize="18sp"
-            android:maxLength="8"
-            android:text="파일이름"
-            android:singleLine="true" />
+            android:text="파일이름"/>
 
         <TextView
-            android:id="@+id/file_storage_label"
+            android:id="@+id/file_full_path_label"
             android:layout_below="@+id/file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/setting_font_color"
-            android:text="이메일"
+            android:text="위치"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/file_full_path"
+            android:layout_below="@+id/file_full_path_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textSize="18sp"
+            android:text="위치"/>
+
+        <TextView
+            android:id="@+id/file_storage_label"
+            android:layout_below="@+id/file_full_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/setting_font_color"
+            android:text="파일용량"
             android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/file_storage"
             android:layout_below="@+id/file_storage_label"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:textSize="18sp"
-            android:maxLength="20"
-            android:text="파일용량"
-            android:singleLine="true" />
+            android:text="파일용량"/>
     </LinearLayout>
 
 </LinearLayout>

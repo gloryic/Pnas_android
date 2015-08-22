@@ -41,8 +41,7 @@ import com.ssm.pnas.nanohttpd.HashIndex;
 import com.ssm.pnas.nanohttpd.Httpd;
 import com.ssm.pnas.tools.file.FileManager;
 
-import java.io.
-        File;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -167,6 +166,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mAdapter = new CustomList(SwipeRefresh.this, mArFile);
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
         mListView.setAdapter(mAdapter);
+
         mListView.setOnItemClickListener(this);
 
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
@@ -181,20 +181,28 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onSwipeEndWithDx(int position, float dx) {
                 // swipe end
+                if(position < 0) return;
                 Log.d(TAG, "SwipeEnd");
-
                 // show dialog
                 if(dx > 500){
+                    mListView.closeMenu();
                     shareDialog = new ShareDialog(mContext, (SwipeRefresh)mContext, mArFile.get(position));
                     shareDialog.show();
+                }else{
+                    mListView.smoothCloseMenu();
                 }
-
-                mListView.closeMenu();
                 mSwipeRefreshLayout.setEnabled(true);
+            }
+
+            @Override
+            public boolean checkPosition(int position){
+                ListRow listRow = mAdapter.getItem(position);
+                Log.d(TAG, listRow.fileName);
+                if(listRow.fileName.equals("..")) return false;
+                else return true;
             }
         });
     }
-
 
     private void initFolder(){
 

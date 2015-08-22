@@ -3,6 +3,7 @@ package com.baoyz.swipemenulistview;
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.ListView;
  * 
  */
 public class SwipeMenuListView extends ListView {
-
 	private static final int TOUCH_STATE_NONE = 0;
 	private static final int TOUCH_STATE_X = 1;
 	private static final int TOUCH_STATE_Y = 2;

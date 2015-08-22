@@ -64,7 +64,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private int isServerToggle;
     private String ipAddr;
     private CustomList mAdapter ;
-    private ArrayList<String> mArFile;
+    private ArrayList<String> mArFile, mArFullPath;
 
     private String root = "";
     private String path = "";
@@ -86,7 +86,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
         initFolder();
         initListView();
-        FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,root,path);
+        FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,mArFullPath,root,path);
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -161,7 +161,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     private void initListView() {
 
         mArFile = new ArrayList<String>();
-        mAdapter = new CustomList(SwipeRefresh.this, mArFile);
+        mArFullPath = new ArrayList<String>();
+        mAdapter = new CustomList(SwipeRefresh.this, mArFile,mArFullPath);
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
 
         mListView.setAdapter(mAdapter);
@@ -352,7 +353,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
     }
 
 
-
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
         if (position == 0) {
@@ -362,7 +362,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         String strPath = FileManager.getInstance().getAbsolutePath(strItem,path);
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
-        FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
+        FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,mArFullPath,root,strPath);
     }
 
 

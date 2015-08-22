@@ -164,10 +164,12 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
         mArFile = new ArrayList<String>();
         mArFullPath = new ArrayList<String>();
+
         mAdapter = new CustomList(SwipeRefresh.this, mArFile,mArFullPath);
         mListView=(SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
             @Override
@@ -184,7 +186,7 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
                 // show dialog
                 if(dx > 500){
-                    shareDialog = new ShareDialog(mContext, (SwipeRefresh)mContext);
+                    shareDialog = new ShareDialog(mContext, (SwipeRefresh)mContext, mArFullPath.get(position));
                     shareDialog.show();
                 }
 

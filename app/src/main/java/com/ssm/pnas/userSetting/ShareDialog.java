@@ -31,14 +31,19 @@ import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.HashIndex;
 
+import java.util.ArrayList;
+
 public class ShareDialog extends AlertDialog.Builder {
 
     private SharedPreferences pref;
     private Context mContext;
+    private String mFullPath;
 
-    public ShareDialog(Context context, Activity activity) {
+    public ShareDialog(Context context, Activity activity, String item) {
         super(context);
         mContext = context;
+        mFullPath = item;
+
         View dialogSoundInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogSoundInnerView);
 
@@ -55,14 +60,14 @@ public class ShareDialog extends AlertDialog.Builder {
 //        });
 
         //btn register
-        this.setPositiveButton("확인",
+        this.setPositiveButton("공유",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
                         //TODO test
-                        String code = HashIndex.getInstance().generateCode(Environment.getExternalStorageDirectory().toString()+"/Music");
-                        String shareUrl = C.localIP+":"+C.port+"/"+code;
-                        Toast.makeText(mContext, "code : '" + code + "'로 공유 완료!", Toast.LENGTH_SHORT).show();
+                        String code = HashIndex.getInstance().generateCode(mFullPath);
+                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
+                        Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
 
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -72,8 +77,6 @@ public class ShareDialog extends AlertDialog.Builder {
                             android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", shareUrl);
                             clipboard.setPrimaryClip(clip);
                         }
-
-
                     }
                 });
 

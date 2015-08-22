@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.format.Formatter;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,6 +91,8 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         //mTextMsg = (TextView) findViewById(R.id.textMessage);
         //mTextMsg.setText(mRoot);
 
+        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
+
         root = Environment.getExternalStorageDirectory().toString();
         path = root;
 
@@ -99,9 +102,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mListView = (SwipeMenuListView) findViewById(R.id.activity_main_swipemenulistview);
-
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -155,20 +155,6 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
                         break;
                 }
                 return false;
-            }
-        });
-
-        // set SwipeListener
-        mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
             }
         });
 
@@ -362,6 +348,22 @@ public class SwipeRefresh extends AppCompatActivity implements SwipeRefreshLayou
         mListView = (SwipeMenuListView)findViewById(R.id.activity_main_swipemenulistview);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+        mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+                Log.d(TAG, "SwipeStart");
+                mSwipeRefreshLayout.setEnabled(false);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+                Log.d(TAG, "SwipeEnd");
+                mSwipeRefreshLayout.setEnabled(true);
+            }
+        });
     }
 
     @Override

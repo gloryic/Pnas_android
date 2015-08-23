@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.format.Formatter;
@@ -165,11 +164,6 @@ public class LabSettingActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		Log.i("log", "userSetting resume");
-
-		//TODO test
-		String code = HashIndex.getInstance().generateCode(Environment.getExternalStorageState()+"/Music");
-		Toast.makeText(this, "code : "+code, Toast.LENGTH_SHORT).show();
-
 		super.onResume();
 	}	
 }

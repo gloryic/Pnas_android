@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.ssm.pnas.C;
 import com.ssm.pnas.Dbg;
 import com.ssm.pnas.tools.file.FileManager;
+import com.ssm.pnas.userSetting.ListRow;
 
 public class WebManager {
 	
@@ -62,7 +63,7 @@ public class WebManager {
     public boolean isInBoundary(String strCode){
         try{
             int code = Integer.parseInt(strCode);
-            if(0 < code && HashIndex.MAX_NUM > code) return true;
+            if(0 <= code && HashIndex.MAX_NUM > code) return true;
             else return false;
         }
         catch(NumberFormatException e) {
@@ -93,15 +94,16 @@ public class WebManager {
         }
         else if(splitUri[2].equals("viewall")){
             result.put("status", "200");
-            JSONObject subResult = new JSONObject();
-            Map<String,String> selects = HashIndex.getInstance().getHashMap();
+            JSONArray subResult = new JSONArray();
+            Map<String,ListRow> selects = HashIndex.getInstance().getHashMap();
 
-            for(Map.Entry<String, String> entry : selects.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                subResult.put(key,value);
+            for(Map.Entry<String, ListRow> entry : selects.entrySet()) {
+                JSONObject tmp = new JSONObject();
+                tmp.put("code", entry.getKey());
+                tmp.put("path",entry.getValue().getFileFullPath());
+                tmp.put("isDir",entry.getValue().isDir());
+                subResult.put(tmp);
             }
-
             result.put("responseData",subResult);
         	return result.toString().replaceAll("\\\\","");
         }
@@ -113,33 +115,64 @@ public class WebManager {
 
             String code = splitUri[3];
 
-            //TODO
-            Httpd httpd = Httpd.getInstance(mContext);
-
-            String fullPath = httpd.getFilePath(code);
-            String[] pathArr = fullPath.split("/");
-            String curPath = pathArr[pathArr.length-1];
-
-            Log.d(TAG, fullPath);
-
             result.put("status", "200");
+            JSONArray fileListJson = new JSONArray();
             JSONObject subResult = new JSONObject();
-            JSONObject fileListJson = new JSONObject();
-            JSONObject curfile = new JSONObject();
+            JSONObject tmp;
 
-            String [] list = FileManager.getInstance().getFileList(fullPath); //TODO
-
-            curfile.put(code,curPath);
-
-            for(String one : list){
-                one = fullPath.concat("/").concat(one);
-                fileListJson.put(HashIndex.getInstance().generateCode(one), one);
+            //0000 is Pbox's Root
+            if(code.equals("0000")){
+                ArrayList<ListRow> list = C.myPboxList;
+                for(ListRow item : list){
+                    tmp = new JSONObject();
+                    tmp.put("code", item.getCode());
+                    tmp.put("path", item.getFileFullPath());
+                    tmp.put("isDir", item.isDir());
+                    fileListJson.put(tmp);
+                }
+                subResult.put("filelist",fileListJson);
+                result.put("responseData",subResult);
+                return result.toString().replaceAll("\\\\","");
             }
-            subResult.put("curfile",curfile);
-            subResult.put("filelist",fileListJson);
+            else{
+                //TODO
+                Httpd httpd = Httpd.getInstance(mContext);
 
-            result.put("responseData",subResult);
-            return result.toString().replaceAll("\\\\","");
+                ListRow curItem = httpd.getFilePath(code);
+
+                if(curItem == null)
+                    throw new Exception("WRONG CODE");
+
+                String fullPath = curItem.getFileFullPath();
+//              String[] pathArr = fullPath.split("/");
+//              String curPath = pathArr[pathArr.length-1];
+
+                Log.d(TAG, fullPath);
+
+                String [] list = FileManager.getInstance().getFileList(fullPath);
+
+                tmp = new JSONObject();
+                tmp.put("code", curItem.getCode());
+                tmp.put("path", curItem.getFileFullPath());
+                tmp.put("isDir", curItem.isDir());
+
+                subResult.put("curfile",tmp);
+
+                for(String one : list){
+                    one = fullPath.concat("/").concat(one);
+                    ListRow item = HashIndex.getInstance().generateCode(one);
+                    tmp = new JSONObject();
+                    tmp.put("code", item.getCode());
+                    tmp.put("path", item.getFileFullPath());
+                    tmp.put("isDir", item.isDir());
+                    fileListJson.put(tmp);
+                }
+
+                subResult.put("filelist",fileListJson);
+
+                result.put("responseData",subResult);
+                return result.toString().replaceAll("\\\\","");
+            }
         }
         else{
         	Log.d(TAG, "ERROR : Wrong Method");

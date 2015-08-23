@@ -56,6 +56,7 @@ public class HashIndex {
 
         if(item != null && item.getFileFullPath().equals(fullPath)) {
             Log.d(TAG, "already exist file");
+            item.setIsDuplic(true);
             return item;
         }
         else {
@@ -76,6 +77,12 @@ public class HashIndex {
             }
             return item;
         }
+    }
+
+    public ListRow dismissCode(ListRow listrow){
+        hashTable.remove(listrow.getCode());
+        listrow.setCode("");
+        return listrow;
     }
 
     public String getFormatedCode(int code){

@@ -121,7 +121,7 @@ public class FileManager {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void  fileList2Array(ArrayList<ListRow> adapterList, CustomList mAdapter, ArrayList<ListRow> mArFile) {
+    public void fileList2Array(ArrayList<ListRow> adapterList, CustomList mAdapter, ArrayList<ListRow> mArFile) {
 
         if (mArFile == null)
             return;

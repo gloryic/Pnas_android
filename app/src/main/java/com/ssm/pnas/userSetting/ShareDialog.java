@@ -54,7 +54,7 @@ public class ShareDialog extends AlertDialog.Builder {
         file_storage.setText("12kb");
 
 
-        if (currentFrag.equals("Other box")) {
+        if (currentFrag != null && currentFrag.equals("Other box")) {
             //btn register
             this.setPositiveButton("다운로드",
                     new DialogInterface.OnClickListener() {
@@ -72,7 +72,7 @@ public class ShareDialog extends AlertDialog.Builder {
                         }
                     });
         }
-        else if (currentFrag.equals("My box")) {
+        else if (currentFrag != null && currentFrag.equals("My box")) {
             //btn register
             this.setPositiveButton("복사",
                     new DialogInterface.OnClickListener() {

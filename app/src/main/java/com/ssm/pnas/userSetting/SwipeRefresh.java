@@ -204,6 +204,11 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 if(listRow.fileName.equals("..")) return false;
                 else return true;
             }
+            @Override
+            public boolean checkAbleMove(){
+                
+                return false;
+            }
         });
     }
 

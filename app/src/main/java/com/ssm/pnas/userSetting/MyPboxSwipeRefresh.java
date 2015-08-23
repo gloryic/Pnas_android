@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -58,6 +59,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
     private CustomList mAdapter ;
 
     private ArrayList<ListRow> mArFile, tempArrayList;
+    private RelativeLayout mBlurBlock;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,10 +103,20 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
             Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
 //            finish();
 
+        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blur_block);
+        if (C.isServerToggle == 0) {
+            mBlurBlock.bringToFront();
+        }
+        else {
+            mBlurBlock.setVisibility(View.GONE);
+        }
+
+        
         mListView = (SwipeMenuListView) getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setEnabled(false);
 
         initListView();
         setListArray();

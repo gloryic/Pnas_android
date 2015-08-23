@@ -86,4 +86,5 @@ public class C {
 
 	static public int isServerToggle = 0;
 	public static String currentFrag;
+	public static String remoteIP;
 }

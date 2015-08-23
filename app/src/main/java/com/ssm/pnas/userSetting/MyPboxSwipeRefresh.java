@@ -268,6 +268,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
         if(num!=null){
             String[] ipArr = C.localIP.split("\\.");
             ipAddress =  ipArr[0]+"."+ipArr[1]+"."+ipArr[2]+"."+num;
+            C.remoteIP = ipAddress;
         }
         else
             ipAddress = C.localIP;

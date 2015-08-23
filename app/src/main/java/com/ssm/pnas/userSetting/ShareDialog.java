@@ -29,7 +29,7 @@ public class ShareDialog extends AlertDialog.Builder {
     private Context mContext;
     private final ListRow listRow;
     private TextView file_name, file_storage, file_full_path;
-    private final TextView isShare;
+    private final TextView tvStatus;
 
     public ShareDialog(Context context, Activity activity, ListRow item, int position) {
         super(context);
@@ -39,7 +39,7 @@ public class ShareDialog extends AlertDialog.Builder {
         SwipeMenuListView mListView = (SwipeMenuListView)activity.findViewById(R.id.activity_main_swipemenulistview);
         View itemView = mListView.getChildAt(position);
 
-        isShare = (TextView)itemView.findViewById(R.id.tv_name);
+        tvStatus = (TextView)itemView.findViewById(R.id.tv_status);
 
         View dialogShareInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogShareInnerView);
@@ -71,7 +71,8 @@ public class ShareDialog extends AlertDialog.Builder {
                         ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                         String code = fileItem.getCode();
 
-                        isShare.setText("!!");
+                        //TODO
+                        //tvStatus.setText(code);
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
@@ -85,9 +86,6 @@ public class ShareDialog extends AlertDialog.Builder {
 
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
-
-                        listRow.isSharing=true;
-                        listRow.code = code;
 
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -116,6 +114,8 @@ public class ShareDialog extends AlertDialog.Builder {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         HashIndex.getInstance().dismissCode(listRow);
+                        //TODO
+                        //tvStatus.setText("공유가능");
                         dialog.cancel();
                     }
                 });

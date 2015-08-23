@@ -1,8 +1,10 @@
 package com.ssm.pnas;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import com.ssm.pnas.tools.device.Devices;
+import com.ssm.pnas.userSetting.ListRow;
 
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.location.Location;
@@ -79,4 +81,6 @@ public class C {
 	static public boolean logTestStart = false;
 	
 	static public String DeviceName = new Devices().getDeviceName();
+
+	static public ArrayList<ListRow> myPboxList = new ArrayList();
 }

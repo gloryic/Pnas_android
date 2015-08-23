@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -26,7 +27,7 @@ import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private Context mContext;
 
     /**
@@ -81,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
+                //.replace(R.id.container, new MyPboxSwipeRefresh())
                 .replace(R.id.container, mSwipeRefreshFragment)
                 .commit();
 
@@ -137,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
                         if (ipAddr != null) {
                             isServerToggle = 1;
 
-                            String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
+                            String uri = ipAddr + ":" + C.port;
 
                             // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
                             // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -183,6 +185,14 @@ public class MainActivity extends ActionBarActivity {
         }
 
         switch (item.getItemId()) {
+
+            case 0:
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new MyPboxSwipeRefresh());
+                return true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }

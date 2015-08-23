@@ -25,8 +25,8 @@ public class CustomList extends ArrayAdapter<ListRow> {
     private final Activity context;
     private final ArrayList<ListRow> listRow;
 
-    enum imgType {dotdot,folder,music,movie,img,doc,hwp,none}
-    Integer imgArr[] = new Integer[10];
+    enum imgType {dotdot,folder,music,movie,img,doc,hwp,pdf,zip,none}
+    Integer imgArr[] = new Integer[20];
 
     void setImgArr()
     {
@@ -37,6 +37,9 @@ public class CustomList extends ArrayAdapter<ListRow> {
         imgArr[imgType.none.ordinal()] = R.drawable.ic_insert_drive_file_black_48dp_pnas;
         imgArr[imgType.doc.ordinal()] = R.drawable.google_docs_pnas;
         imgArr[imgType.hwp.ordinal()]= R.drawable.unnamed_pnas;
+        imgArr[imgType.pdf.ordinal()] = R.drawable.pdf_icon_pnas;
+        imgArr[imgType.movie.ordinal()] = R.drawable.film_icon_pnas;
+        imgArr[imgType.zip.ordinal()] = R.drawable.zip_silver_pnas;
     }
 
 
@@ -61,13 +64,23 @@ public class CustomList extends ArrayAdapter<ListRow> {
             {
                 return imgArr[imgType.music.ordinal()];
             }
-            else if(extensionName.equals(".jpg")){
+            else if(extensionName.equals(".jpg")||extensionName.equals(".png")){
                 return 77;
+            }
+            else if(extensionName.equals(".pdf")){
+                return imgArr[imgType.pdf.ordinal()];
+            }
+            else if(extensionName.equals(".mp4")||extensionName.equals(".avi")){
+                return imgArr[imgType.movie.ordinal()];
             }
             else if(extensionName.equals(".doc")||extensionName.equals(".docx")){
                 return imgArr[imgType.doc.ordinal()];
-            }else if(extensionName.equals(".hwp")){
+            }
+            else if(extensionName.equals(".hwp")){
                 return imgArr[imgType.hwp.ordinal()];
+            }
+            else if(extensionName.equals(".zip")){
+                return imgArr[imgType.zip.ordinal()];
             }
             else
                 return imgArr[imgType.none.ordinal()];
@@ -95,10 +108,10 @@ public class CustomList extends ArrayAdapter<ListRow> {
             int rid = selectImg(listRow.get(position).fileName, listRow.get(position).fileFullPath);
             if(rid==77)
             {
-                holder.iv_icon.setImageResource(imgArr[imgType.img.ordinal()]);
+                //holder.iv_icon.setImageResource(imgArr[imgType.img.ordinal()]);
                 //holder.iv_root.setBackground(context.getResources().getDrawable(R.color.white));
-                //Bitmap myBitmap = BitmapFactory.decodeFile(listRow.get(position).fileFullPath);
-                //holder.iv_icon.setImageBitmap(myBitmap);
+                Bitmap myBitmap = BitmapFactory.decodeFile(listRow.get(position).fileFullPath);
+                holder.iv_icon.setImageBitmap(myBitmap);
             }
             else
             {

@@ -9,6 +9,7 @@ public class ListRow{
     public String fileFullPath;
     public String code;
     public boolean isDir;
+    public boolean isSharing;
     public boolean isDuplic;
 
     /**
@@ -23,6 +24,7 @@ public class ListRow{
         this.fileFullPath = fileFullPath;
         this.code = code;
         this.isDir = isDir;
+        this.isSharing = false;
         this.isDuplic = false;
     }
 
@@ -55,6 +57,7 @@ public class ListRow{
     public void setIsDir(boolean isDir) {
         this.isDir = isDir;
     }
+
 
     public boolean isDuplic() {
         return isDuplic;

@@ -61,7 +61,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private CustomList mAdapter ;
 
-    private ArrayList<ListRow> mArFile;
+    static private ArrayList<ListRow> mArFile;
     private String root = "";
     private String path = "";
 
@@ -253,8 +253,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         String strItem = mArFile.get(position).fileName;
-        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path)
-                ;
+        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path);
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
         else
@@ -287,5 +286,10 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
 
     return thumbBitmap;
+    }
+
+    void changeTvtoHash()
+    {
+
     }
 }

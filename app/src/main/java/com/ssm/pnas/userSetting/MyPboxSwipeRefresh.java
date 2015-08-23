@@ -22,9 +22,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
@@ -37,6 +34,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,7 +43,7 @@ import java.util.TimerTask;
  * Created by kangSI on 2015-08-23.
  */
 public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
-    private static String TAG = "MainActivity";
+    private static String TAG = "MyPboxSwipeRefresh";
 
     private Handler mTimerHandler;
     private TimerTask mTask;
@@ -54,11 +53,11 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Response.Listener<JSONObject> onFileListResponse;
     private Response.ErrorListener onErrorListener;
-    public ArrayList<ListRow> fileItemArrayList;
+    private String prevCode;
     private CustomList mAdapter ;
 
     private ArrayList<ListRow> mArFile, tempArrayList;
-
+    private Stack<ListRow> fileStack;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,12 +69,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
                 try {
                     Log.d(TAG, response.toString());
                     FileListResponse fileListResponse = new FileListResponse(response);
-
-                    //TODO
-                    //fileItemArrayList = fileListResponse.getFileArrayList();
-
-
-                    FileManager.getInstance().fileList2Array(mArFile, mAdapter, tempArrayList);//TODO
+                    FileManager.getInstance().fileList2Array(mArFile, mAdapter, fileListResponse.getFileArrayList());//TODO
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -147,23 +141,6 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 //        // set creator
 //        mListView.setMenuCreator(creator);
 
-        // step 2. listener item click event
-        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        // open
-                        break;
-                    case 1:
-                        // delete
-//					delete(item);
-                        break;
-                }
-                return false;
-            }
-        });
-
         // other setting
 //		listView.setCloseInterpolator(new BounceInterpolator());
 
@@ -186,10 +163,11 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
     private void initListView() {
 
+        fileStack = new Stack();
+        fileStack.add(new ListRow("..","..","0000",false));
         mArFile = new ArrayList<ListRow>();
         mAdapter = new CustomList(getActivity(), mArFile);
         mListView=(SwipeMenuListView)getActivity().findViewById(R.id.activity_main_swipemenulistview);
-
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
 
@@ -197,39 +175,20 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public void onSwipeStart(int position) {
-                // swipe start
-                Log.d(TAG, "SwipeStart");
-                mSwipeRefreshLayout.setEnabled(false);
             }
 
             @Override
             public void onSwipeEndWithDx(int position, float dx) {
-                // swipe end
-                if (position < 0) return;
-                Log.d(TAG, "SwipeEnd");
-                // show dialog
-                if (dx > 500) {
-                    mListView.closeMenu();
-                    shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position));
-                    shareDialog.show();
-                } else {
-                    mListView.smoothCloseMenu();
-                }
-                mSwipeRefreshLayout.setEnabled(true);
             }
 
             @Override
             public boolean checkPosition(int position) {
-                ListRow listRow = mAdapter.getItem(position);
-                Log.d(TAG, listRow.fileName);
-                if (listRow.fileName.equals("..")) return false;
-                else return true;
+                return false;
             }
 
             @Override
-            public boolean checkAbleMove(){
-                if(C.isServerToggle == 1) return true;
-                else return false;
+            public boolean checkAbleMove() {
+                return false;
             }
         });
     }
@@ -272,13 +231,24 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
-        if (position == 0) {
-            return;
-        }
+        if (position == 0 && fileStack.size() == 1) return;
         ListRow listRow = mAdapter.getItem(position);
 
-        FileListRequest fileListRequest = new FileListRequest(C.localIP,listRow.code);
-        NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
+        if (position == 1 && listRow.getFileName().equals("..")){
+            fileStack.pop();
+            FileListRequest fileListRequest = new FileListRequest(C.localIP,fileStack.peek().getCode());
+            NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
+        }
+        else if(listRow.isDir()){
+            fileStack.add(listRow);
+            FileListRequest fileListRequest = new FileListRequest(C.localIP,listRow.code);
+            NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
+        }
+        else{
+            //다이얼로그
+            shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position));
+            shareDialog.show();
+        }
     }
 
     private Bitmap getThumbnail(String path){

@@ -20,6 +20,7 @@ public class FileListResponse {
 
 			JSONObject responseData = resultObj.getJSONObject("responseData");
 			JSONArray fileListArr = responseData.getJSONArray("filelist");
+			JSONObject curFile = responseData.getJSONObject("curfile");
 
 			int length = fileListArr.length();
 			JSONObject row;
@@ -31,10 +32,18 @@ public class FileListResponse {
 
 			fileArrayList = new ArrayList();
 
+			if(!curFile.getString("code").equals("0000")){
+				path = "..";
+				code = "-1";
+				isDir = false;
+				pathArr = path.split("/");
+				fileArrayList.add(new ListRow(pathArr[pathArr.length-1],path,code,isDir));
+			}
+
 			for(int i=0; i<length; i++){
 				row = fileListArr.getJSONObject(i);
-				path = new String(row.getString("path").getBytes("ISO-8859-1"), "UTF-8");
-				code = new String(row.getString("code").getBytes("ISO-8859-1"), "UTF-8");
+				path = new String(row.getString("path"));
+				code = new String(row.getString("code"));
 				isDir = row.getBoolean("isDir");
 				pathArr = path.split("/");
 				fileArrayList.add(new ListRow(pathArr[pathArr.length-1],path,code,isDir));

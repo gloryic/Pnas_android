@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.HashIndex;
@@ -26,13 +27,19 @@ public class ShareDialog extends AlertDialog.Builder {
 
     private SharedPreferences pref;
     private Context mContext;
-    private ListRow listRow;
-    private TextView file_name, file_storage, file_full_path;
+    private final ListRow listRow;
+    private TextView file_name, file_storage, file_full_path, file_share;
+    private final TextView tvStatus;
 
-    public ShareDialog(Context context, Activity activity, ListRow item) {
+    public ShareDialog(Context context, Activity activity, ListRow item, int position) {
         super(context);
         mContext = context;
         listRow = item;
+
+        SwipeMenuListView mListView = (SwipeMenuListView)activity.findViewById(R.id.activity_main_swipemenulistview);
+        View itemView = mListView.getChildAt(position);
+
+        tvStatus = (TextView)itemView.findViewById(R.id.tv_status);
 
         View dialogShareInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogShareInnerView);
@@ -46,24 +53,17 @@ public class ShareDialog extends AlertDialog.Builder {
         file_full_path.setText(item.fileFullPath);
         file_storage.setText("12kb");
 
-//        btn_announce_test = (Button) dialogSoundInnerView.findViewById(R.id.btn_announce_test);
-//        btn_announce_test.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                switch (v.getId()) {
-//                    case R.id.btn_announce_test:
-//                        break;
-//                }
-//            }
-//        });
-
         //btn register
         this.setPositiveButton("공유",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
+
                         ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                         String code = fileItem.getCode();
 
+//                        //TODO
+//                        tvStatus.setText(code);
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
@@ -71,7 +71,9 @@ public class ShareDialog extends AlertDialog.Builder {
                         //TODO - 쉐얼드로 처리
                         String[] pathArr = fileItem.getFileFullPath().split("/");
                         String fileName = pathArr[pathArr.length-1];
-                        C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
+
+                        if(!fileItem.isDuplic())
+                            C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
 
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
@@ -94,6 +96,17 @@ public class ShareDialog extends AlertDialog.Builder {
 //                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
 //                        FileDownloader.getInstance(mContext).downloadFile(shareUrl);
 
+                        dialog.cancel();
+                    }
+                });
+
+        //TODO
+        this.setNeutralButton("공유중지",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        HashIndex.getInstance().dismissCode(listRow);
+                        //TODO
+                        tvStatus.setText("공유가능");
                         dialog.cancel();
                     }
                 });

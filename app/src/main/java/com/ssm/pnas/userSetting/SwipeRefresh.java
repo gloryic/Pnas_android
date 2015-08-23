@@ -63,7 +63,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private CustomList mAdapter ;
 
-    private ArrayList<ListRow> mArFile;
+    static private ArrayList<ListRow> mArFile;
     private String root = "";
     private String path = "";
 
@@ -169,7 +169,6 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
         mListView=(SwipeMenuListView)getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mListView.setAdapter(mAdapter);
-
         mListView.setOnItemClickListener(this);
 
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
@@ -187,9 +186,9 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 if(position < 0) return;
                 Log.d(TAG, "SwipeEnd");
                 // show dialog
-                if(dx > 500){
+                if(dx > 400){
                     mListView.closeMenu();
-                    shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position));
+                    shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position), position);
                     shareDialog.show();
                 }else{
                     mListView.smoothCloseMenu();
@@ -299,5 +298,10 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
 
     return thumbBitmap;
+    }
+
+    void changeTvtoHash()
+    {
+
     }
 }

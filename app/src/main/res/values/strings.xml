@@ -64,6 +64,9 @@
     <string name="server_summary">서버를 생성합니다.</string>
 
     <string name="tv_summary">해당 파일을 공유합니다.</string>
+    <string name="tv_status1">    </string>
+    <string name="tv_status2">공유가능</string>
+    <string name="tv_status3">0000</string>
 
     <string name="advancedsetting_summary">컨텐츠를 설정합니다.</string>
 
@@ -75,8 +78,8 @@
     <string name="stopnoticall">Noticall이 중지 되었습니다.</string>
     <string name="startnoticall">Noticall이 시작 되었습니다.</string>
     
-    <string name="stopserver">서버중지</string>
-    <string name="starserver">서버시작</string>
+    <string name="stopserver">공유중지</string>
+    <string name="starserver">공유시작</string>
     
     <string name="setzerocontent">1순위 컨텐츠를 선택해주세요</string>
     <string name="setfree">무료통화 시간과\r\n초기화 날짜를 입력해주세요.</string>
@@ -116,5 +119,10 @@
     <string name="setsharesetting">공유를 합니다.</string>
     <string name="ip_is_null_m">공유가 되지 않고 있습니다.</string>
     <string name="ip_is_not_null_m">공유가 되고 있습니다.</string>
+    <string name="drawer_first_menu">File Browser</string>
+    <string name="drawer_second_menu">My Pbox</string>
+    <string name="drawer_third_menu">Your Pbox</string>
+    <string name="drawer_second_menu_summary">내가 공유하고 있는 목록입니다.</string>
+
 
 </resources>

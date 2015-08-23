@@ -75,8 +75,8 @@
     <string name="stopnoticall">Noticall이 중지 되었습니다.</string>
     <string name="startnoticall">Noticall이 시작 되었습니다.</string>
     
-    <string name="stopserver">서버중지</string>
-    <string name="starserver">서버시작</string>
+    <string name="stopserver">공유중지</string>
+    <string name="starserver">공유시작</string>
     
     <string name="setzerocontent">1순위 컨텐츠를 선택해주세요</string>
     <string name="setfree">무료통화 시간과\r\n초기화 날짜를 입력해주세요.</string>

@@ -1,5 +1,15 @@
 package com.ssm.pnas.tools.downloader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,44 +23,62 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.ssm.noticall.C;
-
 public class FileDownloader {
-	private static AdFileDownloader instance;
-	private SharedPreferences pref;
-	private static AdFDState state;
+    private static String TAG = "FileDownloader";
+
+	private static FileDownloader instance;
+	private static FDState state;
 	private Context mContext;
 
-	public enum AdFDState {
+	public enum FDState {
 		INIT, READY, ONGOING, END
 	};
 
-	String baseURL = C.baseURL; // URL
-	String Save_Path;
-	String Save_folder = "/Noticall-Data";
+	String baseURL; // URL
+	private String Save_Path;
+	private String Save_folder = "/Downloads";
 
+    DownloadThread dThread;
 	DownloadListThread dlThread;
 	DownloadQueueThread dqThread;
+
+    Handler mFDThreadHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case 0:
+                    Log.d(TAG, "File download finish.");
+                    Toast.makeText(mContext, "File download finish.", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Log.d(TAG, "Try again please. [Server Error]");
+                    state = FDState.END;
+                    Toast.makeText(mContext, "Server Error", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Log.d(TAG, "Try again please. [Rename Error]");
+                    state = FDState.END;
+                    Toast.makeText(mContext, "Rename Error", Toast.LENGTH_SHORT).show();
+                    break;
+                case 3:
+                    Log.d(TAG, "Try again please. [Downloading Error]");
+                    state = FDState.END;
+                    Toast.makeText(mContext, "Downloading Error", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+        }
+
+    };
 
 	private FileDownloader(Context context) {
 		this.mContext = context;
 		
-		state = AdFDState.INIT;
+		state = FDState.INIT;
 		
 		//Response Listener binding
-        pref = mContext.getSharedPreferences("AdFileDownloader", Context.MODE_PRIVATE);
 
-        Save_Path = pref.getString("save_path", "");
+		this.Save_Path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 
         if (Save_Path.equals("")) {
         	String ext = Environment.getExternalStorageState();
@@ -65,23 +93,24 @@ public class FileDownloader {
 			if (!dir.exists()) {
 				dir.mkdir();
 			}
-
-			Save_Path += "/";
-			pref.edit().putString("save_path", Save_Path).commit();
         }
 
-        state = AdFDState.READY;
+		Save_Path += "/";
+
+        Log.d(TAG, "Save_Path : " + Save_Path);
+
+        state = FDState.READY;
 	}
 
-	public static AdFileDownloader getInstance(Context context) {
+	public static FileDownloader getInstance(Context context) {
 		if (null == instance) {
-			synchronized (AdFileDownloader.class) {
-				instance = new AdFileDownloader(context);
+			synchronized (FileDownloader.class) {
+				instance = new FileDownloader(context);
 			}
 		}
 
-		if (state == AdFDState.END) {
-			state = AdFDState.READY;
+		if (state == FDState.END) {
+			state = FDState.READY;
 		}
 		
 		instance.mContext = context;
@@ -99,60 +128,141 @@ public class FileDownloader {
 		}
 	}
 
-	public void startDownload(int loc) {
-		if (checkNetwork()) {
-			if (state == AdFDState.READY || state == AdFDState.END) {
-				dlThread = new DownloadListThread(baseURL,	Save_Path, loc);
-				dlThread.start();
-				state = AdFDState.ONGOING;
-			}
-			else {
-				Toast.makeText(mContext, "잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-			}
-		}
-	}
-	
-	private void resetDB() {
-		String path = pref.getString("save_path", "");
+    public void startDownload(int loc) {
+        if (checkNetwork()) {
+            if (state == FDState.READY || state == FDState.END) {
+                dlThread = new DownloadListThread(baseURL,	Save_Path, loc);
+                dlThread.start();
+                state = FDState.ONGOING;
+            }
+            else {
+                Toast.makeText(mContext, "잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-		if (path.equals("")) {
-			state = AdFDState.END;
-			return;
-		}
+    public void downloadFile(String targetUrl) {
+        if (checkNetwork()) {
+            if (state == FDState.READY || state == FDState.END) {
+                Log.d(TAG, " targetURL : " + targetUrl);
+                dThread = new DownloadThread(targetUrl, Save_Path);
+                dThread.start();
+                state = FDState.ONGOING;
+            }
+            else {
+                Toast.makeText(mContext, "잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-		final File folder = new File(path);
-		deleteFilesForFolder(folder);
+    class DownloadThread extends Thread {
+        private String mTargetUrl;
+        private String mLocalPath;
+        private String mExt;
+        private String mFileName;
+        private String mType;
+        private String mList_id;
 
-		AdFileDAO.getInstance(mContext).resetTable();
-	}
+        DownloadThread(String targetUrl, String localPath) {
+            mTargetUrl = targetUrl;
+            mLocalPath = localPath;
+        }
 
-	public void deleteFilesForFolder(final File folder) {
-	    for (final File fileEntry : folder.listFiles()) {
-	        if (!fileEntry.isDirectory()) {
-	        	if (!safeDelete(fileEntry, 5)) {
-	        		Log.d("TEST", "Cannot delete the file : " + fileEntry.getPath());
-	        	}
-	        }
-	    }
-	}
+        @Override
+        public void run() {
+            URL requestURL;
+            int Read;
+            try {
+                requestURL = new URL(mTargetUrl);
+                HttpURLConnection conn = (HttpURLConnection) requestURL
+                        .openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
 
-	private boolean safeDelete(File target, int numOfTrials) {
-		int i;
-		boolean isDeleted;
+                // Starts the query
+                conn.connect();
+                int response = conn.getResponseCode();
+                Log.d(TAG, "The response is: " + response);
 
-		for (i = 0; i < numOfTrials; i++) {
-			isDeleted = target.delete();
-			if (isDeleted) {
-				break;
-			}
-		}
+                String temp = conn.getHeaderField("Content-Disposition");
+                if (temp == null) {
+                    Log.d(TAG, "File is not existing in server : " + mTargetUrl);
+                    mFDThreadHandler.sendEmptyMessage(1);
+                    conn.disconnect();
+                    return;
+                }
+                int semicolonIndex = temp.indexOf("filename=");
 
-		if (i == numOfTrials) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+                mFileName = temp.substring(semicolonIndex + "filename=".length(), temp.length());
+
+                String uri = String.format("%s%s", mLocalPath, mFileName);
+
+                Log.d(TAG, "mLocalPath : " + mLocalPath + ", mFileName : " + mFileName);
+
+                File file = new File(uri);
+                if (file.exists()) {
+                    Log.d(TAG, "Already File exist..." + mTargetUrl);
+
+                    int pos = file.getName().lastIndexOf(".");
+                    String originalName = pos == -1 ? file.getName() : file.getName().substring(0, pos);
+
+                    int count = 1;
+
+                    Log.d(TAG, "originalName : " + originalName);
+                    if (pos == -1) {
+                        for (count  = 1; count <= 50; count++) {
+                            file = new File(String.format("%s%s (%d)", file.getParent(), originalName, count));
+                            if (!file.exists()) break;
+                        }
+                    }
+                    else {
+                        String extensionName = file.getName().substring(pos, file.getName().length());
+
+                        for (count = 1; count <= 50; count++) {
+                            file = new File(String.format("%s%s (%d)%s", file.getParent(), originalName, count, extensionName));
+                            if (!file.exists()) break;
+                        }
+                    }
+
+                    Log.d(TAG, "file.getPath() : " + file.getPath() + " count : " + count);
+
+                    if (count == 51) {
+                        mFDThreadHandler.sendEmptyMessage(2);
+                        conn.disconnect();
+                        return;
+                    }
+                }
+
+                int len = conn.getContentLength();
+                byte[] tmpByte = new byte[len];
+                InputStream is = conn.getInputStream();
+
+                FileOutputStream fos = new FileOutputStream(file);
+                for (;;) {
+                    Read = is.read(tmpByte);
+                    if (Read <= 0) {
+                        break;
+                    }
+                    fos.write(tmpByte, 0, Read);
+                }
+                is.close();
+                fos.close();
+
+                mFDThreadHandler.sendEmptyMessage(0);
+
+                conn.disconnect();
+            } catch (MalformedURLException e) {
+                Log.e("ERROR1", e.getMessage());
+                mFDThreadHandler.sendEmptyMessage(3);
+            } catch (IOException e) {
+                Log.e("ERROR2", e.getMessage());
+                e.printStackTrace();
+                mFDThreadHandler.sendEmptyMessage(3);
+            }
+        }
+    }
 	
 	Handler mAfterDownList = new Handler() {
 		@Override
@@ -169,11 +279,9 @@ public class FileDownloader {
 				break;
 			case 1:
 				Log.d("TEST", "Try again please.");
-				state = AdFDState.END;
+				state = FDState.END;
 				break;
 			case 2:
-				resetDB();
-		        pref.edit().putInt("length", 0).commit();
 				break;
 			}
 
@@ -300,13 +408,10 @@ public class FileDownloader {
 			mQueue = new LinkedList<String>();
 
 			initQueue();
-			resetDB();
 		}
 
 		private void initQueue() {
 			Log.d("TEST", "Queue Init");
-
-	        pref.edit().putInt("length", mCount).commit();			
 
 			int length = mCount * 3;
 			for (int i = 1; i <= length; i++) {
@@ -321,7 +426,7 @@ public class FileDownloader {
 				downloadFile();
 			}
 			else {
-				state = AdFDState.END;
+				state = FDState.END;
 			}
 		}
 
@@ -333,7 +438,7 @@ public class FileDownloader {
 				}
 				else {
 					Log.d("TEST", "Queue is empty :: Download finish!");
-					state = AdFDState.END;
+					state = FDState.END;
 				}
 			}
 		}
@@ -348,7 +453,6 @@ public class FileDownloader {
 			dThread1.start();
 
 			data = mQueue.poll().split(" ");
-			AdFileDAO.getInstance(mContext).insertFile(String.format("%s/%s/%s", data[0], data[1], data[2]), data[2], data[1], String.valueOf(mLoc), list_id);
 		}
 
 		Handler mAfterDown = new Handler() {
@@ -439,8 +543,6 @@ public class FileDownloader {
 					}
 					is.close();
 					fos.close();
-
-					AdFileDAO.getInstance(mContext).insertFile(uri, mFileName, mType, String.valueOf(mLoc), mList_id);
 
 					mAfterDown.sendEmptyMessage(0);
 

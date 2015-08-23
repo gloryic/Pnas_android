@@ -79,6 +79,12 @@ public class HashIndex {
         }
     }
 
+    public ListRow dismissCodeIMP(ListRow listrow){
+        hashTable.remove(listrow.getCode());
+        listrow.setCode("");
+        return listrow;
+    }
+
     public String getFormatedCode(int code){
         String strCode = code+"";
         for(int i = 0; i < MAX_RADIX - strCode.length(); i++)

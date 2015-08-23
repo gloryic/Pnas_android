@@ -54,7 +54,8 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
     private Response.Listener<JSONObject> onFileListResponse;
     private Response.ErrorListener onErrorListener;
     private String prevCode;
-    private CustomList mAdapter ;
+    private CustomList mAdapter;
+    private String ipAddress;
 
     private ArrayList<ListRow> mArFile, tempArrayList;
     private Stack<ListRow> fileStack;
@@ -94,7 +95,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
         if (FileManager.getInstance().isSdCard(getActivity()) == false)
             Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
 //            finish();
-
+        setIPAddress(null);
         mListView = (SwipeMenuListView) getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
@@ -232,7 +233,6 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
         mAdapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
         if (position == 0 && fileStack.size() == 1) return;
@@ -240,19 +240,27 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
         if (position == 1 && listRow.getFileName().equals("..")){
             fileStack.pop();
-            FileListRequest fileListRequest = new FileListRequest(C.localIP,fileStack.peek().getCode());
+            FileListRequest fileListRequest = new FileListRequest(ipAddress,fileStack.peek().getCode());
             NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
         }
         else if(listRow.isDir()){
             fileStack.add(listRow);
-            FileListRequest fileListRequest = new FileListRequest(C.localIP,listRow.code);
+            FileListRequest fileListRequest = new FileListRequest(ipAddress,listRow.code);
             NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
         }
         else{
             //다이얼로그
-            shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position));
+            shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position), position);
             shareDialog.show();
         }
+    }
+
+    public void setIPAddress(String num){
+        if(num!=null){
+            String[] ipArr = C.localIP.split("\\.");
+            ipAddress =  ipArr[0]+"."+ipArr[1]+"."+ipArr[2]+"."+num;
+        }
+        ipAddress = C.localIP;
     }
 
     private Bitmap getThumbnail(String path){

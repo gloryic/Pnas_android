@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.HashIndex;
@@ -29,10 +30,15 @@ public class ShareDialog extends AlertDialog.Builder {
     private ListRow listRow;
     private TextView file_name, file_storage, file_full_path;
 
-    public ShareDialog(Context context, Activity activity, ListRow item) {
+    public ShareDialog(Context context, Activity activity, ListRow item, int position) {
         super(context);
         mContext = context;
         listRow = item;
+
+        SwipeMenuListView mListView = (SwipeMenuListView)activity.findViewById(R.id.activity_main_swipemenulistview);
+        View itemView = mListView.getChildAt(position);
+
+        TextView tvName = (TextView)itemView.findViewById(R.id.tv_name);
 
         View dialogShareInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogShareInnerView);
@@ -96,6 +102,15 @@ public class ShareDialog extends AlertDialog.Builder {
 //                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
 //                        FileDownloader.getInstance(mContext).downloadFile(shareUrl);
 
+                        dialog.cancel();
+                    }
+                });
+
+        //TODO
+        this.setNeutralButton("공유중지",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //HashIndex.getInstance().dismissCode();
                         dialog.cancel();
                     }
                 });

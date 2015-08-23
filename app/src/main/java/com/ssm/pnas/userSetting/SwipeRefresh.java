@@ -176,7 +176,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 // show dialog
                 if(dx > 500){
                     mListView.closeMenu();
-                    shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position));
+                    shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position), position);
                     shareDialog.show();
                 }else{
                     mListView.smoothCloseMenu();

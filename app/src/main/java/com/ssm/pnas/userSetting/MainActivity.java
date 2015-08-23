@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mDrawerList = (ListView) findViewById(R.id.drawer);
+        //mDrawerList = (ListView) findViewById(R.id.drawer);
 
         mTitle = getTitle();
 

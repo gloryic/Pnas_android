@@ -44,7 +44,7 @@ import java.util.TimerTask;
  * Created by kangSI on 2015-08-23.
  */
 public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
-    private static String TAG = "MainActivity";
+    private static String TAG = "MyPboxSwipeRefresh";
 
     private Handler mTimerHandler;
     private TimerTask mTask;

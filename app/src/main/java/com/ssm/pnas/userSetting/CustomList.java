@@ -64,7 +64,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
             {
                 return imgArr[imgType.music.ordinal()];
             }
-            else if(extensionName.equals(".jpg")||extensionName.equals(".png")){
+            else if(extensionName.equals(".jpg")||extensionName.equals(".png")||extensionName.equals(".jpeg")){
                 return 77;
             }
             else if(extensionName.equals(".pdf")){
@@ -120,12 +120,18 @@ public class CustomList extends ArrayAdapter<ListRow> {
             holder.tv_name.setText(listRow.get(position).fileName);
             holder.tv_summary.setText(listRow.get(position).fileFullPath);
 
-            if(listRow.get(position).isSharing)
+
+            if(listRow.get(position).fileName.equals(".."))
             {
-                holder.tv_status.setText(listRow.get(position).code.toString());
+                holder.tv_status.setText(context.getResources().getString(R.string.tv_status1));
             }
-            else {
+            else if(FullPathHashMap.getInstance().mss.get(listRow.get(position).fileFullPath)==null)
+            {
                 holder.tv_status.setText(context.getResources().getString(R.string.tv_status2));
+            }
+            else
+            {
+                holder.tv_status.setText(FullPathHashMap.getInstance().mss.get(listRow.get(position).fileFullPath));
             }
         }
         else{
@@ -146,10 +152,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
         return convertView;
     }
 
-    void changeTvtoHash()
-    {
 
-    }
 
     class ViewHolder {
         ImageView iv_icon;

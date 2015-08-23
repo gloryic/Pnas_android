@@ -59,7 +59,7 @@ public class ShareDialog extends AlertDialog.Builder {
             this.setPositiveButton("다운로드",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            String shareUrl = "http://" + C.localIP + ":" + C.port + "/" + listRow.getCode();
+                            String shareUrl = "http://" + C.remoteIP + ":" + C.port + "/" + listRow.getCode();
                             FileDownloader.getInstance(mContext).downloadFile(shareUrl);
                             Toast.makeText(mContext, "다운로드를 시작합니다.", Toast.LENGTH_SHORT).show();
                         }
@@ -137,8 +137,14 @@ public class ShareDialog extends AlertDialog.Builder {
                             ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                             String code = fileItem.getCode();
 
-//                        //TODO
-//                        tvStatus.setText(code);
+
+                        //TODO
+                        if(FullPathHashMap.getInstance().mss.get(listRow.fileFullPath)==(null))
+                        {
+                            tvStatus.setText(code);
+                            FullPathHashMap.getInstance().mss.put(listRow.fileFullPath,code);
+                        }
+
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();

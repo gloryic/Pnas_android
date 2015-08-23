@@ -76,7 +76,7 @@ public class ShareDialog extends AlertDialog.Builder {
                             C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
 
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
-                        Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "공유URL이 복사되었습니다" , Toast.LENGTH_SHORT).show();
 
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);

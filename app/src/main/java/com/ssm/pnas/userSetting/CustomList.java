@@ -124,7 +124,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
             //holder.iv_root.setBackground(context.getResources().getDrawable(R.color.status_background));
             holder.iv_icon.setImageResource(R.drawable.ic_launcher);
             if(C.localIP != null) {
-                holder.tv_name.setText(C.localIP);
+                holder.tv_name.setText(C.localIP+":"+C.port);
                 holder.tv_summary.setText(context.getResources().getString(R.string.ip_is_not_null_m));
             }
             else {

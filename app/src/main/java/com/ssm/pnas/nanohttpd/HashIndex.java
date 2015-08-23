@@ -79,7 +79,7 @@ public class HashIndex {
         }
     }
 
-    public ListRow dismissCodeIMP(ListRow listrow){
+    public ListRow dismissCode(ListRow listrow){
         hashTable.remove(listrow.getCode());
         listrow.setCode("");
         return listrow;

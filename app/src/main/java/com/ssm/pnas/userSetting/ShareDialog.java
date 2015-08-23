@@ -27,8 +27,9 @@ public class ShareDialog extends AlertDialog.Builder {
 
     private SharedPreferences pref;
     private Context mContext;
-    private ListRow listRow;
+    private final ListRow listRow;
     private TextView file_name, file_storage, file_full_path;
+    private final TextView isShare;
 
     public ShareDialog(Context context, Activity activity, ListRow item, int position) {
         super(context);
@@ -38,7 +39,7 @@ public class ShareDialog extends AlertDialog.Builder {
         SwipeMenuListView mListView = (SwipeMenuListView)activity.findViewById(R.id.activity_main_swipemenulistview);
         View itemView = mListView.getChildAt(position);
 
-        TextView tvName = (TextView)itemView.findViewById(R.id.tv_name);
+        isShare = (TextView)itemView.findViewById(R.id.tv_name);
 
         View dialogShareInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogShareInnerView);
@@ -70,6 +71,7 @@ public class ShareDialog extends AlertDialog.Builder {
                         ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                         String code = fileItem.getCode();
 
+                        isShare.setText("!!");
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
@@ -110,7 +112,7 @@ public class ShareDialog extends AlertDialog.Builder {
         this.setNeutralButton("공유중지",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //HashIndex.getInstance().dismissCode();
+                        HashIndex.getInstance().dismissCode(listRow);
                         dialog.cancel();
                     }
                 });

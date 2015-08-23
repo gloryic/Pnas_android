@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String ipAddr;
 
     private String TAG = "MainActivity";
+    private ImageView mBtnEnter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDrawer = (LinearLayout) findViewById(R.id.drawer);
         mBtn0 = (LinearLayout) findViewById(R.id.btn_setting0);
         mBtn1 = (LinearLayout) findViewById(R.id.btn_setting1);
+        mBtnEnter = (ImageView) findViewById(R.id.enterImage);
 
 
         //mDrawerList = (ListView) findViewById(R.id.drawer);
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mBtn0.setOnClickListener(this);
         mBtn1.setOnClickListener(this);
+        mBtnEnter.setOnClickListener(this);
 //        mBtn0.bringToFront();
 //        mBtn1.bringToFront();
         mDrawerLayout.requestLayout();
@@ -98,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
         mSwipeRefreshFragment = new SwipeRefresh();
-        mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
 //        Bundle args = new Bundle();
 //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 //        fragment.setArguments(args);
@@ -279,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Bundle bundle;
         switch (v.getId()) {
             case R.id.btn_setting0:
                 mFragmentManager = getFragmentManager();
@@ -292,6 +297,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.btn_setting1:
+                bundle = new Bundle();
+                bundle.putString("ip", null);
+                mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
+                mMyPboxSwipeRefresh.setArguments(bundle);
+
                 mFragmentManager = getFragmentManager();
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mMyPboxSwipeRefresh)
@@ -303,10 +313,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.enterImage:
+                Log.d(TAG, "enter");
+                EditText et = (EditText) findViewById(R.id.other_code);
+                if (et.getText().length() == 0 || Integer.parseInt(et.getText().toString()) > 255)
+                    break;
+                bundle = new Bundle();
+                bundle.putString("ip", et.getText().toString());
+                mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
+                mMyPboxSwipeRefresh.setArguments(bundle);
+
                 mFragmentManager = getFragmentManager();
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mMyPboxSwipeRefresh)
                         .commit();
+                mDrawerLayout.closeDrawer(mDrawer);
+
+                mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Other box</font>"));
+                C.currentFrag = mToolbar.getTitle().toString();
 
                 break;
         }

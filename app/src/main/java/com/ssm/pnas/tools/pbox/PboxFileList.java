@@ -7,10 +7,10 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.ssm.pnas.C;
-import com.ssm.pnas.nanohttpd.FileItem;
 import com.ssm.pnas.network.NetworkManager;
 import com.ssm.pnas.network.protocol.FileListResponse;
 import com.ssm.pnas.network.protocol.FileListRequest;
+import com.ssm.pnas.userSetting.ListRow;
 
 import org.json.JSONObject;
 
@@ -26,7 +26,7 @@ public class PboxFileList {
     private Response.ErrorListener onErrorListener;
     private volatile static PboxFileList instance = null;
     private static String TAG = "PboxFileList";
-    public ArrayList<FileItem> fileItemArrayList;
+    public ArrayList<ListRow> fileItemArrayList;
 
     private PboxFileList() {
         //Response Listener binding
@@ -38,7 +38,7 @@ public class PboxFileList {
                     FileListResponse fileListResponse = new FileListResponse(response);
 
                     //TODO
-                    fileItemArrayList = fileListResponse.getFileArrayList();
+                    //fileItemArrayList = fileListResponse.getFileArrayList();
 
                 } catch (Exception e) {
                     e.printStackTrace();

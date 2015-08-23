@@ -1,6 +1,6 @@
 package com.ssm.pnas.network.protocol;
 
-import com.ssm.pnas.nanohttpd.FileItem;
+import com.ssm.pnas.userSetting.ListRow;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class FileListResponse {
 	
-	public ArrayList<FileItem> fileArrayList;
+	public ArrayList<ListRow> fileArrayList;
 
 	public FileListResponse(JSONObject jsonObj) {
 		OnSuccess(jsonObj);
@@ -27,6 +27,7 @@ public class FileListResponse {
 			String path;
 			String code;
 			boolean isDir;
+			String[] pathArr;
 
 			fileArrayList = new ArrayList();
 
@@ -35,7 +36,8 @@ public class FileListResponse {
 				path = new String(row.getString("path").getBytes("ISO-8859-1"), "UTF-8");
 				code = new String(row.getString("code").getBytes("ISO-8859-1"), "UTF-8");
 				isDir = row.getBoolean("isDir");
-				fileArrayList.add(new FileItem(path,isDir,code));
+				pathArr = path.split("/");
+				fileArrayList.add(new ListRow(pathArr[pathArr.length-1],path,code,isDir));
 			}
 
 		} catch (Exception e) {
@@ -43,7 +45,7 @@ public class FileListResponse {
 		}
 	}
 
-	public ArrayList<FileItem> getFileArrayList() {
+	public ArrayList<ListRow> getFileArrayList() {
 		return fileArrayList;
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Pnas</string>
+    <string name="app_name">Pbox</string>
     <string name="app_version">V1.0</string>
 
     <string name="action_good">Good button</string>

@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SwipeRefresh mSwipeRefreshFragment;
     private MyPboxSwipeRefresh mMyPboxSwipeRefresh;
 
-    private int isServerToggle;
     private String ipAddr;
 
     private String TAG = "MainActivity";
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mContext = this;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pnas</font>"));
+        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawer = (LinearLayout) findViewById(R.id.drawer);
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mSwipeRefreshFragment.notifyToAdaptor();
 
                     if (!isChecked) {
-                        isServerToggle = 0;
+                        C.isServerToggle = 0;
                         C.localIP = null;
 
                         Httpd.getInstance(mContext).stop();
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         C.localIP = ipAddr;
 
                         if (ipAddr != null) {
-                            isServerToggle = 1;
+                            C.isServerToggle = 1;
 
                             String uri = ipAddr + ":" + C.port;
 

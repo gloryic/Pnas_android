@@ -171,6 +171,9 @@ public class SwipeMenuListView extends ListView {
 		case MotionEvent.ACTION_MOVE:
 
 			mTouchPosition = pointToPosition((int) ev.getX(), (int) ev.getY());
+
+			if(!mOnSwipeListener.checkAbleMove()) return false;
+
 			if(mTouchPosition < 2){
 				if(mTouchPosition < 1) return false;
 				else if(mTouchPosition == 1){
@@ -266,6 +269,7 @@ public class SwipeMenuListView extends ListView {
 		//void onSwipeEnd(int position);
 		void onSwipeEndWithDx(int position, float dx);
 		boolean checkPosition(int position);
+		boolean checkAbleMove();
 	}
 
 	public void setSwipeDirection(int direction) {

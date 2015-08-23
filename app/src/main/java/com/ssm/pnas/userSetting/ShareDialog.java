@@ -72,7 +72,12 @@ public class ShareDialog extends AlertDialog.Builder {
                         String code = fileItem.getCode();
 
                         //TODO
-                        //tvStatus.setText(code);
+                        if(FullPathHashMap.getInstance().mss.get(listRow.fileFullPath)==(null))
+                        {
+                            tvStatus.setText(code);
+                            FullPathHashMap.getInstance().mss.put(listRow.fileFullPath,code);
+                        }
+
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
@@ -115,7 +120,8 @@ public class ShareDialog extends AlertDialog.Builder {
                     public void onClick(DialogInterface dialog, int which) {
                         HashIndex.getInstance().dismissCode(listRow);
                         //TODO
-                        //tvStatus.setText("공유가능");
+                        tvStatus.setText("공유가능");
+                        FullPathHashMap.getInstance().mss.remove(listRow.fileFullPath);
                         dialog.cancel();
                     }
                 });

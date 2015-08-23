@@ -64,7 +64,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
             {
                 return imgArr[imgType.music.ordinal()];
             }
-            else if(extensionName.equals(".jpg")||extensionName.equals(".png")){
+            else if(extensionName.equals(".jpg")||extensionName.equals(".png")||extensionName.equals(".jpeg")){
                 return 77;
             }
             else if(extensionName.equals(".pdf")){

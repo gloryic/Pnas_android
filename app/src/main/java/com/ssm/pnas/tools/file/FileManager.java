@@ -24,7 +24,8 @@ public class FileManager {
     private String downLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getName();
     private String dcimLoadRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getName();
     private String kakaoTalkDown = "KakaoTalkDownload";
-    public String[] initList = {musicRoot, movieRoot, downLoadRoot, dcimLoadRoot,kakaoTalkDown};
+    private String pictureRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getName();
+    public String[] initList = {musicRoot, movieRoot, downLoadRoot, dcimLoadRoot,pictureRoot,kakaoTalkDown};
 
     private FileManager()
     {

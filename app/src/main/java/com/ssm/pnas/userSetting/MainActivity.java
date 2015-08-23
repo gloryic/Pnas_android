@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
+import com.ssm.pnas.network.NetworkManager;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager mFragmentManager;
     private SwipeRefresh mSwipeRefreshFragment;
     private MyPboxSwipeRefresh mMyPboxSwipeRefresh;
+    private BackPressCloseHandler backPressCloseHandler;
 
     private String ipAddr;
 
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         mContext = this;
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
@@ -108,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        NetworkManager.getInstance().initialize(this);
     }
 
     public void onSectionAttached(int number) {
@@ -165,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
 
                             Httpd.getInstance(mContext).start();
-                            Toast.makeText(mContext, uri, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, uri, Toast.LENGTH_SHORT).show();
                             Toast.makeText(mContext, getResources().getString(R.string.starserver), Toast.LENGTH_SHORT).show();
 
                         } else
@@ -282,6 +288,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(mDrawer);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
+    }
+    @Override
+    protected void onPause() {
+        Log.i("log", "userSetting pause");
+        super.onPause();
+    }
+    @Override
+    protected void onDestroy() {
+
+        Log.i("log", "userSetting dest");
+        // TODO Auto-generated method stub
+        super.onDestroy();
+    }
+    @Override
+    protected void onRestart() {
+
+        Log.i("log", "userSetting rest");
+        // TODO Auto-generated method stub
+        super.onRestart();
+    }
+    @Override
+    protected void onStart() {
+        Log.i("log", "userSetting stt");
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        Log.i("log", "userSetting stop");
+        super.onStop();
+
+        //TODO
+        switchCompat.setChecked(false);
+        C.isServerToggle = 0;
+        C.localIP = null;
+        Httpd.getInstance(mContext).stop();
+        Toast.makeText(mContext, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    protected void onResume() {
+        Log.i("log", "userSetting resume");
+        super.onResume();
     }
 
 //    /**

@@ -71,7 +71,9 @@ public class ShareDialog extends AlertDialog.Builder {
                         //TODO - 쉐얼드로 처리
                         String[] pathArr = fileItem.getFileFullPath().split("/");
                         String fileName = pathArr[pathArr.length-1];
-                        C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
+
+                        if(!fileItem.isDuplic())
+                            C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
 
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();

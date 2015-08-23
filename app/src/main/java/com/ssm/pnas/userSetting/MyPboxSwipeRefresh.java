@@ -183,7 +183,11 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public boolean checkPosition(int position) {
+                ListRow listRow = mAdapter.getItem(position);
+                Log.d(TAG, listRow.fileName);
                 return false;
+                //if (listRow.fileName.equals("..")) return false;
+                //else return true;
             }
 
             @Override

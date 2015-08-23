@@ -157,7 +157,6 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
         mListView=(SwipeMenuListView)getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mListView.setAdapter(mAdapter);
-
         mListView.setOnItemClickListener(this);
 
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {

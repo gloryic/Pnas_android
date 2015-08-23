@@ -2,6 +2,9 @@ package com.ssm.pnas.nanohttpd;
 
 import android.util.Log;
 
+import com.ssm.pnas.userSetting.ListRow;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -13,7 +16,7 @@ public class HashIndex {
 
     private volatile static HashIndex instance = null;
     private static String TAG = "HashIndex";
-    private Map<String,String> hashTable;
+    private Map<String,ListRow> hashTable;
     public static int MAX_NUM = 10000;
     public static int MAX_RADIX = 4;
 
@@ -28,36 +31,50 @@ public class HashIndex {
 
     private HashIndex(){
         hashTable = new HashMap();
+        hashTable.put("0000",null);
     }
 
-    public Map<String,String> getHashMap(){
+    public Map<String,ListRow> getHashMap(){
         return hashTable;
     }
 
     /**
      * code를 키로 갖는 path가 없다면 null반환한다.
      * */
-    public String getPathFromHash(String code){
+    public ListRow getPathFromHash(String code){
         return hashTable.get(code);
     }
 
     /**
      * 10,000개가 꽉찼을때 null반환한다.
      * */
-    public String generateCode(String path){
+    public ListRow generateCode(String fullPath){
         if(hashTable.size() == MAX_NUM) return null;
         int salt = 1;
-        String code = getFormatedCode(hashCode(path, salt, MAX_NUM));
+        String code = getFormatedCode(hashCode(fullPath, salt, MAX_NUM));
+        ListRow item = hashTable.get(code);
 
-        if(hashTable.get(code) == path) {
+        if(item != null && item.getFileFullPath().equals(fullPath)) {
             Log.d(TAG, "already exist file");
-            return code;
+            return item;
         }
         else {
             while (hashTable.get(code) != null)
-                code = getFormatedCode(hashCode(path, salt += 3, MAX_NUM));
-            hashTable.put(code, path);
-            return code;
+                code = getFormatedCode(hashCode(fullPath, salt += 3, MAX_NUM));
+            File file = new File(fullPath);
+
+            String[] fullPathArr = fullPath.split("/");
+            if(fullPathArr.length < 1) return null;
+
+            if(file.isDirectory()){
+                item = new ListRow(fullPathArr[fullPathArr.length-1],fullPath,code,true);
+                hashTable.put(code, item);
+            }
+            else{
+                item = new ListRow(fullPathArr[fullPathArr.length-1],fullPath,code,false);
+                hashTable.put(code, item);
+            }
+            return item;
         }
     }
 

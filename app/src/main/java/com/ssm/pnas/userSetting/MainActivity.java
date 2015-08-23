@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -27,7 +28,7 @@ import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private Context mContext;
 
     /**
@@ -41,12 +42,12 @@ public class MainActivity extends ActionBarActivity {
      */
     private CharSequence mTitle;
 
+    private SwitchCompat switchCompat;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private SwipeRefresh mSwipeRefreshFragment;
 
-    private int isServerToggle;
     private String ipAddr;
 
     private String TAG = "MainActivity";
@@ -59,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
         mContext = this;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pnas</font>"));
+        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -83,6 +84,7 @@ public class MainActivity extends ActionBarActivity {
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
+                //.replace(R.id.container, new MyPboxSwipeRefresh())
                 .replace(R.id.container, mSwipeRefreshFragment)
                 .commit();
 
@@ -117,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.actionbar_menu, menu);
         MenuItem item = menu.findItem(R.id.toggle);
         item.setActionView(R.layout.switch_layout);
-        SwitchCompat switchCompat = (SwitchCompat) item.getActionView().findViewById(R.id.switch_for_actionbar);
+        switchCompat = (SwitchCompat) item.getActionView().findViewById(R.id.switch_for_actionbar);
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -126,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
                     mSwipeRefreshFragment.notifyToAdaptor();
 
                     if (!isChecked) {
-                        isServerToggle = 0;
+                        C.isServerToggle = 0;
                         C.localIP = null;
 
                         Httpd.getInstance(mContext).stop();
@@ -137,9 +139,9 @@ public class MainActivity extends ActionBarActivity {
                         C.localIP = ipAddr;
 
                         if (ipAddr != null) {
-                            isServerToggle = 1;
+                            C.isServerToggle = 1;
 
-                            String uri = ipAddr + ":" + C.port + "/views/Dashboard.html";
+                            String uri = ipAddr + ":" + C.port;
 
                             // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
                             // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -189,7 +191,7 @@ public class MainActivity extends ActionBarActivity {
             case 0:
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, new PboxSwipeRefresh());
+                        .replace(R.id.container, new MyPboxSwipeRefresh());
                 return true;
 
 
@@ -216,6 +218,8 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         else{
+            switchCompat.setChecked(false);
+
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Confirm");
             alertDialog.setMessage(getResources().getString(R.string.donotsetwifi));
@@ -228,6 +232,7 @@ public class MainActivity extends ActionBarActivity {
             alertDialog.setNegativeButton("no",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            switchCompat.setChecked(false);
                             dialog.cancel();
                         }
                     });

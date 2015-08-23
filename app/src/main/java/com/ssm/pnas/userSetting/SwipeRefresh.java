@@ -32,6 +32,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.tools.file.FileManager;
 
@@ -203,6 +204,11 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.d(TAG, listRow.fileName);
                 if(listRow.fileName.equals("..")) return false;
                 else return true;
+            }
+            @Override
+            public boolean checkAbleMove(){
+                if(C.isServerToggle == 1) return true;
+                else return false;
             }
         });
     }

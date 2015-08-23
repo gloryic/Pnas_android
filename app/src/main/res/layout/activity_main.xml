@@ -117,7 +117,7 @@
                         android:layout_width="10dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@string/noticalltoglle"
+                        android:text="@string/drawer_first_menu"
                         android:layout_weight="0.7"
                         android:textColor="@color/setting_font_color"
                         android:textSize="@dimen/setting_text_size" />
@@ -196,6 +196,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="50dp"
                 android:paddingBottom="50dp"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -203,6 +205,8 @@
                     android:background="@drawable/settingclick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="horizontal"
                     android:paddingRight="@dimen/setting_button_margin_right">
 
@@ -213,7 +217,7 @@
                         android:background="@drawable/new_editbox"
                         android:layout_marginBottom="15dp"
                         android:paddingLeft="12dp"
-                        android:paddingRight="24dp"
+                        android:paddingRight="48dp"
                         android:layout_centerHorizontal="true"
                         android:textAlignment="center"
                         android:textSize="25sp"

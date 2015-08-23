@@ -37,7 +37,7 @@ public class ShareDialog extends AlertDialog.Builder {
         listRow = item;
 
         SwipeMenuListView mListView = (SwipeMenuListView)activity.findViewById(R.id.activity_main_swipemenulistview);
-        View itemView = mListView.getChildAt(position);
+        View itemView = mListView.getChildAt(position-mListView.getFirstVisiblePosition());
 
         tvStatus = (TextView)itemView.findViewById(R.id.tv_status);
 
@@ -184,6 +184,10 @@ public class ShareDialog extends AlertDialog.Builder {
                         public void onClick(DialogInterface dialog, int which) {
                             HashIndex.getInstance().dismissCode(listRow);
                             //TODO
+
+                            
+                            FullPathHashMap.getInstance().mss.remove(listRow.fileFullPath);
+
                             tvStatus.setText("공유가능");
                             dialog.cancel();
                         }

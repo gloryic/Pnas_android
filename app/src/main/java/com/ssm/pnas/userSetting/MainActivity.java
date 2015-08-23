@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
 
                         ipAddr = getWifiIpAddress();
-                        C.localIP = ipAddr+"/8206";
+                        C.localIP = ipAddr;
 
                         if (ipAddr != null) {
                             C.isServerToggle = 1;

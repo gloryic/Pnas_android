@@ -119,27 +119,43 @@ public class CustomList extends ArrayAdapter<ListRow> {
             }
             holder.tv_name.setText(listRow.get(position).fileName);
             holder.tv_summary.setText(listRow.get(position).fileFullPath);
+
+            if(listRow.get(position).isSharing)
+            {
+                holder.tv_status.setText(listRow.get(position).code.toString());
+            }
+            else {
+                holder.tv_status.setText(context.getResources().getString(R.string.tv_status2));
+            }
         }
         else{
             //holder.iv_root.setBackground(context.getResources().getDrawable(R.color.status_background));
             holder.iv_icon.setImageResource(R.drawable.ic_launcher);
             if(C.localIP != null) {
-                holder.tv_name.setText(C.localIP);
+                holder.tv_name.setText(C.localIP+":"+C.port);
                 holder.tv_summary.setText(context.getResources().getString(R.string.ip_is_not_null_m));
+                holder.tv_status.setText(context.getResources().getString(R.string.tv_status1));
             }
             else {
                 holder.tv_name.setText(context.getResources().getString(R.string.ip_is_null));
                 holder.tv_summary.setText(context.getResources().getString(R.string.ip_is_null_m));
+                holder.tv_status.setText(context.getResources().getString(R.string.tv_status1));
             }
 
         }
         return convertView;
     }
 
+    void changeTvtoHash()
+    {
+
+    }
+
     class ViewHolder {
         ImageView iv_icon;
         TextView tv_name;
         TextView tv_summary;
+        TextView tv_status;
         RelativeLayout iv_root;
 
 
@@ -148,6 +164,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
             iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
             tv_summary = (TextView) view.findViewById(R.id.tv_summary);
+            tv_status = (TextView) view.findViewById(R.id.tv_status);
 
             view.setTag(this);
         }

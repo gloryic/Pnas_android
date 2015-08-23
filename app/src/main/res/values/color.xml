@@ -37,6 +37,7 @@
     <color name="setting_line_breaker">#99EBEDEF</color>
     <color name="setting_font_color">#ff000000</color>
     <color name="setting_font_color_summary">#ffA0A0A0</color>
+    <color name="setting_font_color_summary2">#a02b32</color>
     <color name="setting_background">#ff336699</color>
     
     <color name="disabletransparent">#ffE8E8E8</color>

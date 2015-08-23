@@ -56,6 +56,7 @@ public class HashIndex {
 
         if(item != null && item.getFileFullPath().equals(fullPath)) {
             Log.d(TAG, "already exist file");
+            item.setIsDuplic(true);
             return item;
         }
         else {

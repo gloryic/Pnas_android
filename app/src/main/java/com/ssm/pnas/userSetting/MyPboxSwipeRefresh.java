@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,9 +31,7 @@ import com.ssm.pnas.tools.file.FileManager;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -64,6 +60,35 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.swipe_to_refresh, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (FileManager.getInstance().isSdCard(getActivity()) == false)
+            Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
+//            finish();
+
+        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blur_block);
+        if (C.isServerToggle == 0) {
+            mBlurBlock.bringToFront();
+        }
+        else {
+            mBlurBlock.setVisibility(View.GONE);
+        }
+
+        setIPAddress(this.getArguments().getString("ip"));
+
+        mListView = (SwipeMenuListView) getActivity().findViewById(R.id.activity_main_swipemenulistview);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setEnabled(false);
+
+        initListView();
 
         //Response Listener binding
         onFileListResponse = new Response.Listener<JSONObject>() {
@@ -86,37 +111,8 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
                 // TODO Auto-generated method stub
             }
         };
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.swipe_to_refresh, container, false);
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (FileManager.getInstance().isSdCard(getActivity()) == false)
-            Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
-//            finish();
-
-        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blur_block);
-        if (C.isServerToggle == 0) {
-            mBlurBlock.bringToFront();
-        }
-        else {
-            mBlurBlock.setVisibility(View.GONE);
-        }
-
-        setIPAddress(null);
-
-        mListView = (SwipeMenuListView) getActivity().findViewById(R.id.activity_main_swipemenulistview);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setEnabled(false);
-
-        initListView();
-        setListArray();
-
+        initListArray();
         // step 1. create a MenuCreator
 //        SwipeMenuCreator creator = new SwipeMenuCreator() {
 //            @Override
@@ -170,9 +166,9 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
         });
     }
 
-    public void setListArray(){
-        tempArrayList = C.myPboxList;
-        FileManager.getInstance().fileList2Array(mArFile, mAdapter, tempArrayList);
+    public void initListArray(){
+        FileListRequest fileListRequest = new FileListRequest(ipAddress,fileStack.peek().getCode());
+        NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
     }
 
     private void initListView() {
@@ -263,7 +259,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
         }
         else{
             //다이얼로그
-            shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position), position);
+            shareDialog = new ShareDialog(getActivity(), getActivity(), mArFile.get(position), position, C.currentFrag);
             shareDialog.show();
         }
     }
@@ -273,7 +269,8 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
             String[] ipArr = C.localIP.split("\\.");
             ipAddress =  ipArr[0]+"."+ipArr[1]+"."+ipArr[2]+"."+num;
         }
-        ipAddress = C.localIP;
+        else
+            ipAddress = C.localIP;
     }
 
     private Bitmap getThumbnail(String path){

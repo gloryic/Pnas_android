@@ -62,8 +62,14 @@ public class ShareDialog extends AlertDialog.Builder {
                         ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                         String code = fileItem.getCode();
 
-//                        //TODO
-//                        tvStatus.setText(code);
+
+                        //TODO
+                        if(FullPathHashMap.getInstance().mss.get(listRow.fileFullPath)==(null))
+                        {
+                            tvStatus.setText(code);
+                            FullPathHashMap.getInstance().mss.put(listRow.fileFullPath,code);
+                        }
+
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
@@ -107,6 +113,9 @@ public class ShareDialog extends AlertDialog.Builder {
                         HashIndex.getInstance().dismissCode(listRow);
                         //TODO
                         tvStatus.setText("공유가능");
+
+                        FullPathHashMap.getInstance().mss.remove(listRow.fileFullPath);
+
                         dialog.cancel();
                     }
                 });

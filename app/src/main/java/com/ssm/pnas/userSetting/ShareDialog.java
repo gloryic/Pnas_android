@@ -92,7 +92,6 @@ public class ShareDialog extends AlertDialog.Builder {
                     public void onClick(DialogInterface dialog, int which) {
 //                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
 //                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
-
 //                        FileDownloader.getInstance(mContext).downloadFile(shareUrl);
 
                         dialog.cancel();

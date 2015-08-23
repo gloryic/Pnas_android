@@ -31,7 +31,7 @@ public class ShareDialog extends AlertDialog.Builder {
     private TextView file_name, file_storage, file_full_path, file_share;
     private final TextView tvStatus;
 
-    public ShareDialog(Context context, Activity activity, ListRow item, int position) {
+    public ShareDialog(Context context, Activity activity, ListRow item, int position, String currentFrag) {
         super(context);
         mContext = context;
         listRow = item;
@@ -53,14 +53,89 @@ public class ShareDialog extends AlertDialog.Builder {
         file_full_path.setText(item.fileFullPath);
         file_storage.setText("12kb");
 
-        //btn register
-        this.setPositiveButton("공유",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+
+        if (currentFrag.equals("Other box")) {
+            //btn register
+            this.setPositiveButton("다운로드",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String shareUrl = "http://" + C.remoteIP + ":" + C.port + "/" + listRow.getCode();
+                            FileDownloader.getInstance(mContext).downloadFile(shareUrl);
+                            Toast.makeText(mContext, "다운로드를 시작합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            this.setNegativeButton("취소",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+        }
+        else if (currentFrag.equals("My box")) {
+            //btn register
+            this.setPositiveButton("복사",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
 
 
-                        ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
-                        String code = fileItem.getCode();
+                            ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+                            String code = fileItem.getCode();
+
+//                        //TODO
+//                        tvStatus.setText(code);
+//                        SharedPreferences.Editor editor = pref.edit();
+//                        editor.putStringSet("MyPbox", oneItem);
+//                        editor.commit();
+
+                            //TODO - 쉐얼드로 처리
+                            String[] pathArr = fileItem.getFileFullPath().split("/");
+                            String fileName = pathArr[pathArr.length - 1];
+
+                            if (!fileItem.isDuplic())
+                                C.myPboxList.add(new ListRow(fileName, fileItem.getFileFullPath(), fileItem.getCode(), fileItem.isDir()));
+
+                            String shareUrl = "http://" + C.localIP + ":" + C.port + "/" + code;
+                            Toast.makeText(mContext, "공유코드 : " + code, Toast.LENGTH_SHORT).show();
+
+                            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                clipboard.setText(shareUrl);
+                            } else {
+                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", shareUrl);
+                                clipboard.setPrimaryClip(clip);
+                            }
+
+                        }
+                    });
+
+            this.setNegativeButton("취소",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            //TODO
+            this.setNeutralButton("공유중지",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            HashIndex.getInstance().dismissCode(listRow);
+                            //TODO
+                            tvStatus.setText("공유가능");
+                            dialog.cancel();
+                        }
+                    });
+        }
+        else {
+            this.setPositiveButton("공유",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                            ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+                            String code = fileItem.getCode();
 
 
                         //TODO
@@ -74,52 +149,46 @@ public class ShareDialog extends AlertDialog.Builder {
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
 
-                        //TODO - 쉐얼드로 처리
-                        String[] pathArr = fileItem.getFileFullPath().split("/");
-                        String fileName = pathArr[pathArr.length-1];
+                            //TODO - 쉐얼드로 처리
+                            String[] pathArr = fileItem.getFileFullPath().split("/");
+                            String fileName = pathArr[pathArr.length - 1];
 
-                        if(!fileItem.isDuplic())
-                            C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
+                            if (!fileItem.isDuplic())
+                                C.myPboxList.add(new ListRow(fileName, fileItem.getFileFullPath(), fileItem.getCode(), fileItem.isDir()));
 
-                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
-                        Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
+                            String shareUrl = "http://" + C.localIP + ":" + C.port + "/" + code;
+                            Toast.makeText(mContext, "공유코드 : " + code, Toast.LENGTH_SHORT).show();
 
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            clipboard.setText(shareUrl);
-                        } else {
-                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", shareUrl);
-                            clipboard.setPrimaryClip(clip);
+                            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                clipboard.setText(shareUrl);
+                            } else {
+                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", shareUrl);
+                                clipboard.setPrimaryClip(clip);
+                            }
+
                         }
-                    }
-                });
+                    });
 
-        this.setNegativeButton("취소",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-//                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
-//                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
-//                        FileDownloader.getInstance(mContext).downloadFile(shareUrl);
+            this.setNegativeButton("취소",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
 
-                        dialog.cancel();
-                    }
-                });
-
-        //TODO
-        this.setNeutralButton("공유중지",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        HashIndex.getInstance().dismissCode(listRow);
-                        //TODO
-                        tvStatus.setText("공유가능");
-
-                        FullPathHashMap.getInstance().mss.remove(listRow.fileFullPath);
-
-                        dialog.cancel();
-                    }
-                });
-
+            //TODO
+            this.setNeutralButton("공유중지",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            HashIndex.getInstance().dismissCode(listRow);
+                            //TODO
+                            tvStatus.setText("공유가능");
+                            dialog.cancel();
+                        }
+                    });
+        }
         this.setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

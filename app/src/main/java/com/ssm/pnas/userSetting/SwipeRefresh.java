@@ -318,8 +318,5 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
     return thumbBitmap;
     }
 
-    void changeTvtoHash()
-    {
 
-    }
 }

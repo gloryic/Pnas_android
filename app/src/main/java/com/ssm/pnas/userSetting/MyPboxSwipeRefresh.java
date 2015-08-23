@@ -20,12 +20,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.ssm.pnas.C;
 import com.ssm.pnas.R;
+import com.ssm.pnas.network.NetworkManager;
+import com.ssm.pnas.network.protocol.FileListRequest;
+import com.ssm.pnas.network.protocol.FileListResponse;
 import com.ssm.pnas.tools.file.FileManager;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +43,7 @@ import java.util.TimerTask;
 /**
  * Created by kangSI on 2015-08-23.
  */
-public class PboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
     private static String TAG = "MainActivity";
 
     private Handler mTimerHandler;
@@ -44,7 +52,9 @@ public class PboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnR
     private ShareDialog shareDialog;
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    private Response.Listener<JSONObject> onFileListResponse;
+    private Response.ErrorListener onErrorListener;
+    public ArrayList<ListRow> fileItemArrayList;
     private CustomList mAdapter ;
 
     private ArrayList<ListRow> mArFile, tempArrayList;
@@ -53,6 +63,32 @@ public class PboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnR
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //Response Listener binding
+        onFileListResponse = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d(TAG, response.toString());
+                    FileListResponse fileListResponse = new FileListResponse(response);
+
+                    //TODO
+                    //fileItemArrayList = fileListResponse.getFileArrayList();
+
+
+                    FileManager.getInstance().fileList2Array(mArFile, mAdapter, tempArrayList);//TODO
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        onErrorListener = new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+                // TODO Auto-generated method stub
+            }
+        };
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.swipe_to_refresh, container, false);
     }
@@ -71,10 +107,7 @@ public class PboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         initListView();
-        tempArrayList = new ArrayList<ListRow>();
-        tempArrayList.add(new ListRow("hello","gg",""));
-        tempArrayList.add(new ListRow("hello","gg",""));
-        FileManager.getInstance().fileList2Array(mArFile, mAdapter, tempArrayList);
+        setListArray();
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -144,7 +177,11 @@ public class PboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnR
                 return false;
             }
         });
+    }
 
+    public void setListArray(){
+        tempArrayList = C.myPboxList;
+        FileManager.getInstance().fileList2Array(mArFile, mAdapter, tempArrayList);
     }
 
     private void initListView() {
@@ -234,9 +271,10 @@ public class PboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.OnR
         if (position == 0) {
             return;
         }
+        ListRow listRow = mAdapter.getItem(position);
 
-
-        FileManager.getInstance().fileList2Array(mArFile, mAdapter, tempArrayList);//TODO
+        FileListRequest fileListRequest = new FileListRequest(C.localIP,listRow.code);
+        NetworkManager.getInstance().request(fileListRequest, onFileListResponse, onErrorListener);
     }
 
     private Bitmap getThumbnail(String path){

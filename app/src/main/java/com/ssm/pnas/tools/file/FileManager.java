@@ -102,20 +102,20 @@ public class FileManager {
             return;
 
         mArFile.clear();
-        mArFile.add(new ListRow("","",""));
+        mArFile.add(new ListRow("","","",true));
 
 
         if (root.equals(path)) {
             for (int i = 0; i < initList.length; i++) {
-                mArFile.add(new ListRow(initList[i],root+"/"+initList[i],""));
+                mArFile.add(new ListRow(initList[i],root+"/"+initList[i],"",false));
             }
         } else {
             if (root.length() < path.length()) {
-                mArFile.add(new ListRow("..",path,""));
+                mArFile.add(new ListRow("..",path,"",false));
             }
 
             for (int i = 0; i < fileList.length; i++) {
-                mArFile.add(new ListRow(fileList[i],path+"/"+fileList[i],""));
+                mArFile.add(new ListRow(fileList[i],path+"/"+fileList[i],"",false));
             }
         }
         mAdapter.notifyDataSetChanged();
@@ -127,7 +127,7 @@ public class FileManager {
             return;
 
         adapterList.clear();
-        adapterList.add(new ListRow("","",""));
+        adapterList.add(new ListRow("","","",false));
 
         for (int i = 0; i < mArFile.size(); i++) {
             adapterList.add(mArFile.get(i));

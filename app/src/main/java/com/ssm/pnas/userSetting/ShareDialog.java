@@ -18,6 +18,9 @@ import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.HashIndex;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ShareDialog extends AlertDialog.Builder {
 
     private SharedPreferences pref;
@@ -57,11 +60,17 @@ public class ShareDialog extends AlertDialog.Builder {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath).getCode();
+                        ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+                        String code = fileItem.getCode();
 
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("code",code);
-                        editor.commit();
+//                        SharedPreferences.Editor editor = pref.edit();
+//                        editor.putStringSet("MyPbox", oneItem);
+//                        editor.commit();
+
+                        //TODO - 쉐얼드로 처리
+                        String[] pathArr = fileItem.getFileFullPath().split("/");
+                        String fileName = pathArr[pathArr.length-1];
+                        C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
 
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();

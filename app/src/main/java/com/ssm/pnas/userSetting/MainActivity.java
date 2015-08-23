@@ -19,6 +19,7 @@ import android.text.format.Formatter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ssm.pnas.C;
@@ -34,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private DrawerLayout mDrawerLayout;
 
+    private ListView mDrawerList;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -61,6 +63,8 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        mDrawerList = (ListView) findViewById(R.id.drawer);
+
         mTitle = getTitle();
 
         setSupportActionBar(mToolbar);
@@ -70,7 +74,6 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-
 
         mSwipeRefreshFragment = new SwipeRefresh();
 //        Bundle args = new Bundle();

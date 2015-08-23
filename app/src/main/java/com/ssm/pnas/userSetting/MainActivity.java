@@ -1,6 +1,7 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -84,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mBtn0.setOnClickListener(this);
         mBtn1.setOnClickListener(this);
-        mBtn0.bringToFront();
-        mBtn1.bringToFront();
+//        mBtn0.bringToFront();
+//        mBtn1.bringToFront();
         mDrawerLayout.requestLayout();
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -141,15 +142,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     // do something, the isChecked will be
                     // true if the switch is in the On position
+
                     mSwipeRefreshFragment.notifyToAdaptor();
+
+                    mToolbar.getTitle().equals("Pbox");
 
                     if (!isChecked) {
                         C.isServerToggle = 0;
+                        findViewById(R.id.blur_block).setVisibility(View.VISIBLE);
+                        findViewById(R.id.blur_block).bringToFront();
+
                         C.localIP = null;
 
                         Httpd.getInstance(mContext).stop();
                         Toast.makeText(mContext, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
                     } else {
+                        findViewById(R.id.blur_block).setVisibility(View.GONE);
 
                         ipAddr = getWifiIpAddress();
                         C.localIP = ipAddr;
@@ -174,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -271,6 +278,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .replace(R.id.container, mSwipeRefreshFragment)
                         .commit();
                 mDrawerLayout.closeDrawer(mDrawer);
+
+                mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
+                C.currentFrag = mToolbar.getTitle().toString();
+
                 break;
             case R.id.btn_setting1:
                 mFragmentManager = getFragmentManager();
@@ -278,6 +289,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .replace(R.id.container, mMyPboxSwipeRefresh)
                         .commit();
                 mDrawerLayout.closeDrawer(mDrawer);
+
+                mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>My box</font>"));
+                C.currentFrag = mToolbar.getTitle().toString();
+
+                break;
+            case R.id.enterImage:
+                mFragmentManager = getFragmentManager();
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.container, mMyPboxSwipeRefresh)
+                        .commit();
+
                 break;
         }
     }

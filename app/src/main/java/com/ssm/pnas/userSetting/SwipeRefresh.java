@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -55,6 +56,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
     private ShareDialog shareDialog;
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RelativeLayout mBlurBlock;
 
     private int isServerToggle;
     private String ipAddr;
@@ -78,6 +80,14 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blur_block);
+        if (C.isServerToggle == 0) {
+            mBlurBlock.bringToFront();
+        }
+        else {
+            mBlurBlock.setVisibility(View.GONE);
+        }
+
         if (FileManager.getInstance().isSdCard(getActivity()) == false)
             Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
 //            finish();
@@ -88,6 +98,8 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setEnabled(true);
+
         initFolder();
         initListView();
         FileManager.getInstance().fileList2Array(FileManager.getInstance().initList,mAdapter,mArFile,root,path);
@@ -254,8 +266,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         String strItem = mArFile.get(position).fileName;
-        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path)
-                ;
+        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path);
         String[] fileList = FileManager.getInstance().getFileList(strPath);
         if(fileList!=null && fileList.length>=0) path = strPath;
         else

@@ -85,4 +85,5 @@ public class C {
 	static public ArrayList<ListRow> myPboxList = new ArrayList();
 
 	static public int isServerToggle = 0;
+	public static String currentFrag;
 }

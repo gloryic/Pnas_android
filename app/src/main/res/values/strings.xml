@@ -64,6 +64,9 @@
     <string name="server_summary">서버를 생성합니다.</string>
 
     <string name="tv_summary">해당 파일을 공유합니다.</string>
+    <string name="tv_status1">    </string>
+    <string name="tv_status2">공유가능</string>
+    <string name="tv_status3">0000</string>
 
     <string name="advancedsetting_summary">컨텐츠를 설정합니다.</string>
 

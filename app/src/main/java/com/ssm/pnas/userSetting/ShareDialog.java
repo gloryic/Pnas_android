@@ -76,6 +76,9 @@ public class ShareDialog extends AlertDialog.Builder {
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
 
+                        listRow.isSharing=true;
+                        listRow.code = code;
+
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                             clipboard.setText(shareUrl);

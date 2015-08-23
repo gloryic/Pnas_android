@@ -9,6 +9,7 @@ public class ListRow{
     public String fileFullPath;
     public String code;
     public boolean isDir;
+    public boolean isSharing;
 
     /**
      * @param fileName fileName
@@ -22,6 +23,7 @@ public class ListRow{
         this.fileFullPath = fileFullPath;
         this.code = code;
         this.isDir = isDir;
+        this.isSharing = false;
     }
 
     public String getFileName() {
@@ -53,4 +55,6 @@ public class ListRow{
     public void setIsDir(boolean isDir) {
         this.isDir = isDir;
     }
+
+
 }

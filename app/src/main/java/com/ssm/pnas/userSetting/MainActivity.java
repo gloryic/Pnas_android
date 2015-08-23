@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pnas</font>"));
+        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 

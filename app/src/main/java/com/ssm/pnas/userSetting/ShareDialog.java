@@ -28,7 +28,7 @@ public class ShareDialog extends AlertDialog.Builder {
     private SharedPreferences pref;
     private Context mContext;
     private final ListRow listRow;
-    private TextView file_name, file_storage, file_full_path;
+    private TextView file_name, file_storage, file_full_path, file_share;
     private final TextView tvStatus;
 
     public ShareDialog(Context context, Activity activity, ListRow item, int position) {
@@ -53,26 +53,17 @@ public class ShareDialog extends AlertDialog.Builder {
         file_full_path.setText(item.fileFullPath);
         file_storage.setText("12kb");
 
-//        btn_announce_test = (Button) dialogSoundInnerView.findViewById(R.id.btn_announce_test);
-//        btn_announce_test.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                switch (v.getId()) {
-//                    case R.id.btn_announce_test:
-//                        break;
-//                }
-//            }
-//        });
-
         //btn register
         this.setPositiveButton("공유",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
+
                         ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
                         String code = fileItem.getCode();
 
-                        //TODO
-                        //tvStatus.setText(code);
+//                        //TODO
+//                        tvStatus.setText(code);
 //                        SharedPreferences.Editor editor = pref.edit();
 //                        editor.putStringSet("MyPbox", oneItem);
 //                        editor.commit();
@@ -115,7 +106,7 @@ public class ShareDialog extends AlertDialog.Builder {
                     public void onClick(DialogInterface dialog, int which) {
                         HashIndex.getInstance().dismissCode(listRow);
                         //TODO
-                        //tvStatus.setText("공유가능");
+                        tvStatus.setText("공유가능");
                         dialog.cancel();
                     }
                 });

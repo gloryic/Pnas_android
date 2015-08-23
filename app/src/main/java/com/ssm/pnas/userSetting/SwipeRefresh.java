@@ -246,7 +246,23 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
 
-
+    public void back()
+    {
+        String strItem = "..";
+        String strPath = FileManager.getInstance().getAbsolutePath(strItem, path);
+        String[] fileList = FileManager.getInstance().getFileList(strPath);
+        if(fileList!=null && fileList.length>=0) path = strPath;
+        else
+        {
+            //is not directory
+            int pos = strPath.lastIndexOf(".");
+            String extensionName = strPath.substring(pos, strPath.length());
+            if(extensionName.equals(".jpg")) {
+                getThumbnail(strPath);
+            }
+        }
+        FileManager.getInstance().fileList2Array(fileList, mAdapter, mArFile, root, strPath);
+    }
 
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -267,7 +283,7 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 getThumbnail(strPath);
             }
         }
-        FileManager.getInstance().fileList2Array(fileList, mAdapter,mArFile,root,strPath);
+        FileManager.getInstance().fileList2Array(fileList, mAdapter, mArFile, root, strPath);
     }
 
     private Bitmap getThumbnail(String path){

@@ -17,24 +17,29 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private DrawerLayout mDrawerLayout;
+    private LinearLayout mDrawer;
+
+    private LinearLayout mBtn0, mBtn1;
 
     private ListView mDrawerList;
     /**
@@ -46,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private FragmentManager mFragmentManager;
     private SwipeRefresh mSwipeRefreshFragment;
+    private MyPboxSwipeRefresh mMyPboxSwipeRefresh;
 
     private String ipAddr;
 
@@ -63,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (LinearLayout) findViewById(R.id.drawer);
+        mBtn0 = (LinearLayout) findViewById(R.id.btn_setting0);
+        mBtn1 = (LinearLayout) findViewById(R.id.btn_setting1);
+
 
         //mDrawerList = (ListView) findViewById(R.id.drawer);
 
@@ -74,16 +85,23 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        mBtn0.setOnClickListener(this);
+        mBtn1.setOnClickListener(this);
+        mBtn0.bringToFront();
+        mBtn1.bringToFront();
+        mDrawerLayout.requestLayout();
+
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
         mSwipeRefreshFragment = new SwipeRefresh();
+        mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
 //        Bundle args = new Bundle();
 //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 //        fragment.setArguments(args);
 
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
+        mFragmentManager = getFragmentManager();
+        mFragmentManager.beginTransaction()
                 //.replace(R.id.container, new MyPboxSwipeRefresh())
                 .replace(R.id.container, mSwipeRefreshFragment)
                 .commit();
@@ -136,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
 
                         ipAddr = getWifiIpAddress();
-                        C.localIP = ipAddr;
+                        C.localIP = ipAddr+"/8206";
 
                         if (ipAddr != null) {
                             C.isServerToggle = 1;
@@ -187,10 +205,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         switch (item.getItemId()) {
-
             case 0:
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
+                mFragmentManager = getFragmentManager();
+                mFragmentManager.beginTransaction()
                         .replace(R.id.container, new MyPboxSwipeRefresh());
                 return true;
 
@@ -245,6 +262,26 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_setting0:
+                mFragmentManager = getFragmentManager();
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.container, mSwipeRefreshFragment)
+                        .commit();
+                mDrawerLayout.closeDrawer(mDrawer);
+                break;
+            case R.id.btn_setting1:
+                mFragmentManager = getFragmentManager();
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.container, mMyPboxSwipeRefresh)
+                        .commit();
+                mDrawerLayout.closeDrawer(mDrawer);
+                break;
+        }
     }
 
 //    /**

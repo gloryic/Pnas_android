@@ -100,33 +100,20 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                 SwipeMenuItem openItem = new SwipeMenuItem(
                         getActivity().getApplicationContext());
                 // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
+                openItem.setBackground(new ColorDrawable(Color.rgb(0x33,0x66,0x99)));
                 // set item width
-                openItem.setWidth(dp2px(90));
+                openItem.setWidth(dp2px(180));
                 // set item title
-                openItem.setTitle("Open");
+                openItem.setTitle("Share");
                 // set item title fontsize
                 openItem.setTitleSize(18);
                 // set item title font color
                 openItem.setTitleColor(Color.WHITE);
                 // add to menu
                 menu.addMenuItem(openItem);
-
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getActivity().getApplicationContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-                        0x3F, 0x25)));
-                // set item width
-                deleteItem.setWidth(dp2px(90));
-                // set a icon
-                deleteItem.setIcon(R.drawable.ic_delete);
-                // add to menu
-                menu.addMenuItem(deleteItem);
             }
         };
+
         // set creator
         mListView.setMenuCreator(creator);
 
@@ -170,7 +157,6 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
         mListView=(SwipeMenuListView)getActivity().findViewById(R.id.activity_main_swipemenulistview);
 
         mListView.setAdapter(mAdapter);
-
         mListView.setOnItemClickListener(this);
 
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {

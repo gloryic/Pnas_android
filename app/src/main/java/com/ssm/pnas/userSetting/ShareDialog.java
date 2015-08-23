@@ -90,10 +90,10 @@ public class ShareDialog extends AlertDialog.Builder {
         this.setNegativeButton("취소",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
-                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
+//                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+//                        String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
 
-                        FileDownloader.getInstance(mContext).downloadFile(shareUrl);
+//                        FileDownloader.getInstance(mContext).downloadFile(shareUrl);
 
                         dialog.cancel();
                     }

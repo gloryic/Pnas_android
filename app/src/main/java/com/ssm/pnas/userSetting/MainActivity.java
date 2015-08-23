@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
+import com.ssm.pnas.network.NetworkManager;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -106,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        NetworkManager.getInstance().initialize(this);
     }
 
     public void onSectionAttached(int number) {

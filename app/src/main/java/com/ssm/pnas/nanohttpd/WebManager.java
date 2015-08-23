@@ -131,6 +131,13 @@ public class WebManager {
                     fileListJson.put(tmp);
                 }
                 subResult.put("filelist",fileListJson);
+
+                tmp = new JSONObject();
+                tmp.put("code", "0000");
+                tmp.put("path", "..");
+                tmp.put("isDir", "true");
+
+                subResult.put("curfile",tmp);
                 result.put("responseData",subResult);
                 return result.toString().replaceAll("\\\\","");
             }

@@ -90,6 +90,7 @@
             </RelativeLayout>
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/btn_setting0"
             android:clickable="true"

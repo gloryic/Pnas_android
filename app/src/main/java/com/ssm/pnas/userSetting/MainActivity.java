@@ -22,9 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.ssm.pnas.C;
 import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LinearLayout mBtn0, mBtn1;
 
+    private ListView mDrawerList;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBtn1 = (LinearLayout) findViewById(R.id.btn_setting1);
 
 
+        //mDrawerList = (ListView) findViewById(R.id.drawer);
+
         mTitle = getTitle();
 
         setSupportActionBar(mToolbar);
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDrawerLayout.requestLayout();
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-
 
         mSwipeRefreshFragment = new SwipeRefresh();
         mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
 
                         ipAddr = getWifiIpAddress();
-                        C.localIP = ipAddr;
+                        C.localIP = ipAddr+"/8206";
 
                         if (ipAddr != null) {
                             C.isServerToggle = 1;

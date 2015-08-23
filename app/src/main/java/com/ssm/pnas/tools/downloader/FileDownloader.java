@@ -48,7 +48,7 @@ public class FileDownloader {
             switch(msg.what) {
                 case 0:
                     Log.d(TAG, "File download finish.");
-                    Toast.makeText(mContext, "File download finish.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "파일 다운로드가 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
                     Log.d(TAG, "Try again please. [Server Error]");

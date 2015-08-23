@@ -63,7 +63,7 @@ public class WebManager {
     public boolean isInBoundary(String strCode){
         try{
             int code = Integer.parseInt(strCode);
-            if(0 < code && HashIndex.MAX_NUM > code) return true;
+            if(0 <= code && HashIndex.MAX_NUM > code) return true;
             else return false;
         }
         catch(NumberFormatException e) {
@@ -115,47 +115,64 @@ public class WebManager {
 
             String code = splitUri[3];
 
-            //TODO
-            Httpd httpd = Httpd.getInstance(mContext);
-
-            ListRow curItem = httpd.getFilePath(code);
-
-            if(curItem == null)
-                throw new Exception("WRONG CODE");
-
-            String fullPath = curItem.getFileFullPath();
-//            String[] pathArr = fullPath.split("/");
-//            String curPath = pathArr[pathArr.length-1];
-
-            Log.d(TAG, fullPath);
-
             result.put("status", "200");
             JSONArray fileListJson = new JSONArray();
             JSONObject subResult = new JSONObject();
+            JSONObject tmp;
 
-            String [] list = FileManager.getInstance().getFileList(fullPath);
-
-            JSONObject tmp = new JSONObject();
-            tmp.put("code", curItem.getCode());
-            tmp.put("path", curItem.getFileFullPath());
-            tmp.put("isDir", curItem.isDir());
-
-            subResult.put("curfile",tmp);
-
-            for(String one : list){
-                one = fullPath.concat("/").concat(one);
-                ListRow item = HashIndex.getInstance().generateCode(one);
-                tmp = new JSONObject();
-                tmp.put("code", item.getCode());
-                tmp.put("path", item.getFileFullPath());
-                tmp.put("isDir", item.isDir());
-                fileListJson.put(tmp);
+            //0000 is Pbox's Root
+            if(code.equals("0000")){
+                ArrayList<ListRow> list = C.myPboxList;
+                for(ListRow item : list){
+                    tmp = new JSONObject();
+                    tmp.put("code", item.getCode());
+                    tmp.put("path", item.getFileFullPath());
+                    tmp.put("isDir", item.isDir());
+                    fileListJson.put(tmp);
+                }
+                subResult.put("filelist",fileListJson);
+                result.put("responseData",subResult);
+                return result.toString().replaceAll("\\\\","");
             }
+            else{
+                //TODO
+                Httpd httpd = Httpd.getInstance(mContext);
 
-            subResult.put("filelist",fileListJson);
+                ListRow curItem = httpd.getFilePath(code);
 
-            result.put("responseData",subResult);
-            return result.toString().replaceAll("\\\\","");
+                if(curItem == null)
+                    throw new Exception("WRONG CODE");
+
+                String fullPath = curItem.getFileFullPath();
+//              String[] pathArr = fullPath.split("/");
+//              String curPath = pathArr[pathArr.length-1];
+
+                Log.d(TAG, fullPath);
+
+                String [] list = FileManager.getInstance().getFileList(fullPath);
+
+                tmp = new JSONObject();
+                tmp.put("code", curItem.getCode());
+                tmp.put("path", curItem.getFileFullPath());
+                tmp.put("isDir", curItem.isDir());
+
+                subResult.put("curfile",tmp);
+
+                for(String one : list){
+                    one = fullPath.concat("/").concat(one);
+                    ListRow item = HashIndex.getInstance().generateCode(one);
+                    tmp = new JSONObject();
+                    tmp.put("code", item.getCode());
+                    tmp.put("path", item.getFileFullPath());
+                    tmp.put("isDir", item.isDir());
+                    fileListJson.put(tmp);
+                }
+
+                subResult.put("filelist",fileListJson);
+
+                result.put("responseData",subResult);
+                return result.toString().replaceAll("\\\\","");
+            }
         }
         else{
         	Log.d(TAG, "ERROR : Wrong Method");

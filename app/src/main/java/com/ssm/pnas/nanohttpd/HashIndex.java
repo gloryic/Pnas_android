@@ -31,6 +31,7 @@ public class HashIndex {
 
     private HashIndex(){
         hashTable = new HashMap();
+        hashTable.put("0000",null);
     }
 
     public Map<String,ListRow> getHashMap(){

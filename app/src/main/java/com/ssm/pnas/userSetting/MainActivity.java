@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private CharSequence mTitle;
 
+    private SwitchCompat switchCompat;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.actionbar_menu, menu);
         MenuItem item = menu.findItem(R.id.toggle);
         item.setActionView(R.layout.switch_layout);
-        SwitchCompat switchCompat = (SwitchCompat) item.getActionView().findViewById(R.id.switch_for_actionbar);
+        switchCompat = (SwitchCompat) item.getActionView().findViewById(R.id.switch_for_actionbar);
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -215,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else{
+            switchCompat.setChecked(false);
+
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Confirm");
             alertDialog.setMessage(getResources().getString(R.string.donotsetwifi));
@@ -227,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
             alertDialog.setNegativeButton("no",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            switchCompat.setChecked(false);
                             dialog.cancel();
                         }
                     });

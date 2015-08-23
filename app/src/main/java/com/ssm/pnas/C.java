@@ -83,4 +83,6 @@ public class C {
 	static public String DeviceName = new Devices().getDeviceName();
 
 	static public ArrayList<ListRow> myPboxList = new ArrayList();
+
+	static public int isServerToggle = 0;
 }

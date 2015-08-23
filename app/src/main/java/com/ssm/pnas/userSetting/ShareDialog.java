@@ -19,6 +19,9 @@ import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.HashIndex;
 import com.ssm.pnas.tools.downloader.FileDownloader;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ShareDialog extends AlertDialog.Builder {
 
     private SharedPreferences pref;
@@ -34,7 +37,7 @@ public class ShareDialog extends AlertDialog.Builder {
         View dialogShareInnerView = activity.getLayoutInflater().inflate(R.layout.share_dialog_layout, null);
         this.setView(dialogShareInnerView);
 
-        pref = this.getContext().getSharedPreferences("pbox", Context.MODE_PRIVATE);
+        pref = this.getContext().getSharedPreferences("pboxShareList", Context.MODE_PRIVATE);
         file_name = (TextView) dialogShareInnerView.findViewById(R.id.file_name);
         file_storage = (TextView) dialogShareInnerView.findViewById(R.id.file_storage);
         file_full_path = (TextView) dialogShareInnerView.findViewById(R.id.file_full_path);
@@ -58,8 +61,18 @@ public class ShareDialog extends AlertDialog.Builder {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        //TODO test
-                        String code = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+                        ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
+                        String code = fileItem.getCode();
+
+//                        SharedPreferences.Editor editor = pref.edit();
+//                        editor.putStringSet("MyPbox", oneItem);
+//                        editor.commit();
+
+                        //TODO - 쉐얼드로 처리
+                        String[] pathArr = fileItem.getFileFullPath().split("/");
+                        String fileName = pathArr[pathArr.length-1];
+                        C.myPboxList.add(new ListRow(fileName,fileItem.getFileFullPath(),fileItem.getCode(),fileItem.isDir()));
+
                         String shareUrl = "http://"+C.localIP+":"+C.port+"/"+code;
                         Toast.makeText(mContext, "공유코드 : " + code , Toast.LENGTH_SHORT).show();
 

@@ -225,10 +225,14 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
                 if (listRow.fileName.equals("..")) return false;
                 else return true;
             }
+
+            @Override
+            public boolean checkAbleMove(){
+                if(C.isServerToggle == 1) return true;
+                else return false;
+            }
         });
     }
-
-
 
     // Refresh Event
     @Override

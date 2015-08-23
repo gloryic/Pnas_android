@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipeRefresh mSwipeRefreshFragment;
 
-    private int isServerToggle;
     private String ipAddr;
 
     private String TAG = "MainActivity";
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     mSwipeRefreshFragment.notifyToAdaptor();
 
                     if (!isChecked) {
-                        isServerToggle = 0;
+                        C.isServerToggle = 0;
                         C.localIP = null;
 
                         Httpd.getInstance(mContext).stop();
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         C.localIP = ipAddr;
 
                         if (ipAddr != null) {
-                            isServerToggle = 1;
+                            C.isServerToggle = 1;
 
                             String uri = ipAddr + ":" + C.port;
 

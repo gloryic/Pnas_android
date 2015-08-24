@@ -37,7 +37,7 @@ public class ShareDialog extends AlertDialog.Builder {
         listRow = item;
 
         SwipeMenuListView mListView = (SwipeMenuListView)activity.findViewById(R.id.activity_main_swipemenulistview);
-        View itemView = mListView.getChildAt(position);
+        View itemView = mListView.getChildAt(position-mListView.getFirstVisiblePosition());
 
         tvStatus = (TextView)itemView.findViewById(R.id.tv_status);
 
@@ -52,68 +52,8 @@ public class ShareDialog extends AlertDialog.Builder {
         file_name.setText(item.fileName);
         file_full_path.setText(item.fileFullPath);
         file_storage.setText("12kb");
-        if (currentFrag == null) {
-            this.setPositiveButton("공유",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                            ListRow fileItem = HashIndex.getInstance().generateCode(listRow.fileFullPath);
-                            String code = fileItem.getCode();
-
-
-                            //TODO
-                            if(FullPathHashMap.getInstance().mss.get(listRow.fileFullPath)==(null))
-                            {
-                                tvStatus.setText(code);
-                                FullPathHashMap.getInstance().mss.put(listRow.fileFullPath,code);
-                            }
-
-//                        SharedPreferences.Editor editor = pref.edit();
-//                        editor.putStringSet("MyPbox", oneItem);
-//                        editor.commit();
-
-                            //TODO - 쉐얼드로 처리
-                            String[] pathArr = fileItem.getFileFullPath().split("/");
-                            String fileName = pathArr[pathArr.length - 1];
-
-                            if (!fileItem.isDuplic())
-                                C.myPboxList.add(new ListRow(fileName, fileItem.getFileFullPath(), fileItem.getCode(), fileItem.isDir()));
-
-                            String shareUrl = "http://" + C.localIP + ":" + C.port + "/" + code;
-                            Toast.makeText(mContext, "공유코드 : " + code, Toast.LENGTH_SHORT).show();
-
-                            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                clipboard.setText(shareUrl);
-                            } else {
-                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", shareUrl);
-                                clipboard.setPrimaryClip(clip);
-                            }
-
-                        }
-                    });
-
-            this.setNegativeButton("취소",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-            //TODO
-            this.setNeutralButton("공유중지",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            HashIndex.getInstance().dismissCode(listRow);
-                            //TODO
-                            tvStatus.setText("공유가능");
-                            dialog.cancel();
-                        }
-                    });
-        }
-        else if (currentFrag.equals("Other box")) {
+        
+        if (currentFrag != null && currentFrag.equals("Other box")) {
             //btn register
             this.setPositiveButton("다운로드",
                     new DialogInterface.OnClickListener() {
@@ -131,7 +71,7 @@ public class ShareDialog extends AlertDialog.Builder {
                         }
                     });
         }
-        else if (currentFrag.equals("My box")) {
+        else if (currentFrag != null && currentFrag.equals("My box")) {
             //btn register
             this.setPositiveButton("복사",
                     new DialogInterface.OnClickListener() {
@@ -243,6 +183,10 @@ public class ShareDialog extends AlertDialog.Builder {
                         public void onClick(DialogInterface dialog, int which) {
                             HashIndex.getInstance().dismissCode(listRow);
                             //TODO
+
+                            
+                            FullPathHashMap.getInstance().mss.remove(listRow.fileFullPath);
+
                             tvStatus.setText("공유가능");
                             dialog.cancel();
                         }

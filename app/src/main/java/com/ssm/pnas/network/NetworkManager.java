@@ -39,7 +39,6 @@ public class NetworkManager {
 				instance = new NetworkManager();
 			}
 		}
-		
 		return instance;
 	}
 	

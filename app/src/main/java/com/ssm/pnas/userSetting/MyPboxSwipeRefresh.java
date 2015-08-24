@@ -50,13 +50,13 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Response.Listener<JSONObject> onFileListResponse;
     private Response.ErrorListener onErrorListener;
-    private String prevCode;
     private CustomList mAdapter;
     private String ipAddress;
 
-    private ArrayList<ListRow> mArFile, tempArrayList;
+    private ArrayList<ListRow> mArFile;
     private RelativeLayout mBlurBlock;
     private Stack<ListRow> fileStack;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

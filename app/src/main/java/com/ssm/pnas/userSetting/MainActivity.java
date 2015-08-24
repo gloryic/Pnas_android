@@ -1,7 +1,6 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +10,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -24,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -38,18 +35,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Context mContext;
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Fragment managing the behaviors, interactions and presentation of the navigation_layout drawer.
      */
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mDrawer;
+    private LinearLayout mNavigationDrawer;
 
-    private LinearLayout mBtn0, mBtn1;
-
-    private ListView mDrawerList;
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
+    private LinearLayout mBtn0, mBtn1, mBtn2;
 
     private SwitchCompat switchCompat;
     private Toolbar mToolbar;
@@ -63,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String ipAddr;
 
     private String TAG = "MainActivity";
-    private ImageView mBtnEnter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,86 +64,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         backPressCloseHandler = new BackPressCloseHandler(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawer = (LinearLayout) findViewById(R.id.drawer);
+        mNavigationDrawer = (LinearLayout) findViewById(R.id.navigation_drawer);
         mBtn0 = (LinearLayout) findViewById(R.id.btn_setting0);
         mBtn1 = (LinearLayout) findViewById(R.id.btn_setting1);
-        mBtnEnter = (ImageView) findViewById(R.id.enterImage);
+        mBtn2 = (LinearLayout) findViewById(R.id.btn_setting2);
 
-
-        //mDrawerList = (ListView) findViewById(R.id.drawer);
-
-        mTitle = getTitle();
-
-        setSupportActionBar(mToolbar);
-
-
+        mSwipeRefreshFragment = new SwipeRefresh();
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        setActionbarTitle("Pbox");
+        setSupportActionBar(mToolbar);
 
         mBtn0.setOnClickListener(this);
         mBtn1.setOnClickListener(this);
-        mBtnEnter.setOnClickListener(this);
-//        mBtn0.bringToFront();
-//        mBtn1.bringToFront();
-        mDrawerLayout.requestLayout();
+        mBtn2.setOnClickListener(this);
 
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-
-        mSwipeRefreshFragment = new SwipeRefresh();
-//        Bundle args = new Bundle();
-//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//        fragment.setArguments(args);
-
-        // Insert the fragment by replacing any existing fragment
         mFragmentManager = getFragmentManager();
         mFragmentManager.beginTransaction()
-                //.replace(R.id.container, new MyPboxSwipeRefresh())
                 .replace(R.id.container, mSwipeRefreshFragment)
                 .commit();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.requestLayout();
 
+        // Indicator는 기본적으로 Enable 되어있고, 버튼을 보여주는 설정을 해줘야한다.
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         NetworkManager.getInstance().initialize(this);
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+    private void setActionbarTitle(String title) {
+        mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>" + title + "</font>"));
     }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu, menu);
+
         MenuItem item = menu.findItem(R.id.toggle);
         item.setActionView(R.layout.switch_layout);
         switchCompat = (SwitchCompat) item.getActionView().findViewById(R.id.switch_for_actionbar);
+
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // do something, the isChecked will be
-                    // true if the switch is in the On position
 
                     mSwipeRefreshFragment.notifyToAdaptor();
 
@@ -161,23 +117,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (!isChecked) {
                         C.isServerToggle = 0;
-                        findViewById(R.id.blur_block).setVisibility(View.VISIBLE);
-                        findViewById(R.id.blur_block).bringToFront();
+                        findViewById(R.id.blind_block).setVisibility(View.VISIBLE);
+                        findViewById(R.id.blind_block).bringToFront();
 
                         C.localIP = null;
 
                         Httpd.getInstance(mContext).stop();
                         Toast.makeText(mContext, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
                     } else {
-                        findViewById(R.id.blur_block).setVisibility(View.GONE);
-
                         ipAddr = getWifiIpAddress();
                         C.localIP = ipAddr;
 
                         if (ipAddr != null) {
                             C.isServerToggle = 1;
+                            findViewById(R.id.blind_block).setVisibility(View.GONE);
+                            mSwipeRefreshFragment.notifyToAdaptor();
 
-                            String uri = ipAddr + ":" + C.port;
+//                            String uri = ipAddr + ":" + C.port;
 
                             // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
                             // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -209,26 +165,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-
         if(mDrawerToggle.onOptionsItemSelected(item)){
             return true;
         }
 
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         switch (item.getItemId()) {
-            case 0:
-                mFragmentManager = getFragmentManager();
-                mFragmentManager.beginTransaction()
-                        .replace(R.id.container, new MyPboxSwipeRefresh());
-                return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -286,17 +227,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Bundle bundle;
         switch (v.getId()) {
             case R.id.btn_setting0:
+                if (!switchCompat.isChecked()) {
+                    Toast.makeText(this, "서비스를 활성화 해주세요.", Toast.LENGTH_SHORT).show();
+                    mDrawerLayout.closeDrawer(mNavigationDrawer);
+                    return;
+                }
+                else if (C.currentFrag.equals("Pbox")) {
+                    mDrawerLayout.closeDrawer(mNavigationDrawer);
+                    return;
+                }
+
                 mFragmentManager = getFragmentManager();
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mSwipeRefreshFragment)
                         .commit();
-                mDrawerLayout.closeDrawer(mDrawer);
+                mDrawerLayout.closeDrawer(mNavigationDrawer);
 
-                mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Pbox</font>"));
+                setActionbarTitle("Pbox");
                 C.currentFrag = mToolbar.getTitle().toString();
 
                 break;
             case R.id.btn_setting1:
+                if (!switchCompat.isChecked()) {
+                    Toast.makeText(this, "서비스를 활성화 해주세요.", Toast.LENGTH_SHORT).show();
+                    mDrawerLayout.closeDrawer(mNavigationDrawer);
+                    return;
+                }
+                else if (C.currentFrag.equals("My box")) {
+                    mDrawerLayout.closeDrawer(mNavigationDrawer);
+                    return;
+                }
+
                 bundle = new Bundle();
                 bundle.putString("ip", null);
                 mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
@@ -306,17 +267,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mMyPboxSwipeRefresh)
                         .commit();
-                mDrawerLayout.closeDrawer(mDrawer);
+                mDrawerLayout.closeDrawer(mNavigationDrawer);
 
-                mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>My box</font>"));
+                setActionbarTitle("My box");
                 C.currentFrag = mToolbar.getTitle().toString();
 
                 break;
-            case R.id.enterImage:
-                Log.d(TAG, "enter");
+            case R.id.btn_setting2:
+                if (!switchCompat.isChecked()) {
+                    Toast.makeText(this, "서비스를 활성화 해주세요.", Toast.LENGTH_SHORT).show();
+                    mDrawerLayout.closeDrawer(mNavigationDrawer);
+                    return;
+                }
+
                 EditText et = (EditText) findViewById(R.id.other_code);
                 if (et.getText().length() == 0 || Integer.parseInt(et.getText().toString()) > 255)
-                    break;
+                    return;
+
                 bundle = new Bundle();
                 bundle.putString("ip", et.getText().toString());
                 mMyPboxSwipeRefresh = new MyPboxSwipeRefresh();
@@ -326,9 +293,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mMyPboxSwipeRefresh)
                         .commit();
-                mDrawerLayout.closeDrawer(mDrawer);
+                mDrawerLayout.closeDrawer(mNavigationDrawer);
 
-                mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>Other box</font>"));
+                setActionbarTitle("Other box");
                 C.currentFrag = mToolbar.getTitle().toString();
 
                 break;

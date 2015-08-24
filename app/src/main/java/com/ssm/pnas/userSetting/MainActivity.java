@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setActionbarTitle(String title) {
         mToolbar.setTitle(Html.fromHtml("<font color='#ffffff'>" + title + "</font>"));
+        C.currentFrag = title;
     }
 
     @Override
@@ -249,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(mNavigationDrawer);
 
                 setActionbarTitle("Pbox");
-                C.currentFrag = mToolbar.getTitle().toString();
 
                 break;
             case R.id.btn_setting1:
@@ -275,7 +275,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(mNavigationDrawer);
 
                 setActionbarTitle("My box");
-                C.currentFrag = mToolbar.getTitle().toString();
 
                 break;
             case R.id.btn_setting2:
@@ -301,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(mNavigationDrawer);
 
                 setActionbarTitle("Other box");
-                C.currentFrag = mToolbar.getTitle().toString();
 
                 break;
         }

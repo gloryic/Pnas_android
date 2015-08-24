@@ -78,8 +78,8 @@
     <string name="stopnoticall">Noticall이 중지 되었습니다.</string>
     <string name="startnoticall">Noticall이 시작 되었습니다.</string>
     
-    <string name="stopserver">공유중지</string>
-    <string name="starserver">공유시작</string>
+    <string name="stopserver">공유를 중지합니다.</string>
+    <string name="starserver">공유를 시작합니다.</string>
     
     <string name="setzerocontent">1순위 컨텐츠를 선택해주세요</string>
     <string name="setfree">무료통화 시간과\r\n초기화 날짜를 입력해주세요.</string>
@@ -121,8 +121,10 @@
     <string name="ip_is_not_null_m">공유가 되고 있습니다.</string>
     <string name="drawer_first_menu">File Browser</string>
     <string name="drawer_second_menu">My Pbox</string>
-    <string name="drawer_third_menu">Your Pbox</string>
+    <string name="drawer_third_menu">Other Pbox</string>
+    <string name="drawer_first_menu_summary">내 저장소를 탐색합니다..</string>
     <string name="drawer_second_menu_summary">내가 공유하고 있는 목록입니다.</string>
+    <string name="drawer_third_menu_summary">상대방의 박스에 접속합니다.</string>
 
 
 </resources>

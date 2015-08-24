@@ -1,14 +1,8 @@
 package com.ssm.pnas.userSetting;
 
 import android.app.Fragment;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -73,14 +67,14 @@ public class SwipeRefresh extends Fragment implements SwipeRefreshLayout.OnRefre
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.swipe_to_refresh, container, false);
+        return inflater.inflate(R.layout.swipe_list_layout, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blur_block);
+        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blind_block);
         if (C.isServerToggle == 0) {
             mBlurBlock.bringToFront();
         }

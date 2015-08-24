@@ -53,7 +53,6 @@ public class ShareDialog extends AlertDialog.Builder {
         file_full_path.setText(item.fileFullPath);
         file_storage.setText("12kb");
 
-
         if (currentFrag != null && currentFrag.equals("Other box")) {
             //btn register
             this.setPositiveButton("다운로드",

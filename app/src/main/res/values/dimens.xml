@@ -36,7 +36,7 @@
 	<!-- Vertical padding around action bar icons. -->
 	<dimen name="action_bar_icon_vertical_padding">3sp</dimen>
 
-    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+    <!-- Per the design guidelines, navigation_layout drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="navigation_drawer_width">240dp</dimen>
 

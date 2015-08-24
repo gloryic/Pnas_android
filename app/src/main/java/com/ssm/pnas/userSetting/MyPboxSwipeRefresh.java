@@ -61,7 +61,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.swipe_to_refresh, container, false);
+        return inflater.inflate(R.layout.swipe_list_layout, container, false);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
             Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
 //            finish();
 
-        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blur_block);
+        mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blind_block);
         if (C.isServerToggle == 0) {
             mBlurBlock.bringToFront();
         }

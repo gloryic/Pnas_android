@@ -89,7 +89,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
     }
 
     public CustomList(Activity context,ArrayList<ListRow> lr) {
-        super(context, R.layout.list_single, lr);
+        super(context, R.layout.list_temp_layout, lr);
         setImgArr();
         this.context = context;
         this.listRow = lr;
@@ -99,7 +99,7 @@ public class CustomList extends ArrayAdapter<ListRow> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
-            convertView = inflater.inflate(R.layout.item_list_app, null, true);
+            convertView = inflater.inflate(R.layout.list_item_layout, null, true);
             new ViewHolder(convertView);
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();

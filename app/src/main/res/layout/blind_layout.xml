@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4d80f3" >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_warning_white_96dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Pbox가 활성화 되어있지 않습니다."
+            android:id="@+id/largeText"
+            android:textStyle="bold"
+            android:textColor="#ffffffff"
+            android:paddingBottom="20dp" />
+
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="아무것도 공유되지 않고 있습니다. 파일을 공유하고 싶다면 우측 상단의 버튼으로 활성화 해주세요."
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:textIsSelectable="false"
+            android:textColor="#ffffffff"
+            android:singleLine="false"
+            android:gravity="center" />
+    </LinearLayout>
+</RelativeLayout>

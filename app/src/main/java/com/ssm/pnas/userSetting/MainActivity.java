@@ -368,8 +368,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("log", "userSetting dest");
         // TODO Auto-generated method stub
         super.onDestroy();
-        Httpd.getInstance(mContext).stop();
-        OnGoingNotification.getInstance(mContext).closeNotification();
     }
     @Override
     protected void onRestart() {

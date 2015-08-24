@@ -115,7 +115,7 @@
 
     <string name="action_example">Example action</string>
 
-    <string name="ip_is_null">사용시작을 하세요</string>
+    <string name="ip_is_null">공유를 시작하세요.</string>
     <string name="setsharesetting">공유를 합니다.</string>
     <string name="ip_is_null_m">공유가 되지 않고 있습니다.</string>
     <string name="ip_is_not_null_m">공유가 되고 있습니다.</string>

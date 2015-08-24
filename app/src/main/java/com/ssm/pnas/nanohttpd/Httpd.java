@@ -40,6 +40,10 @@ public class Httpd
     	this.mContext = mContext;
     	server = new WebServer();
     }
+
+	public WebServer getWebServer(){
+		return server;
+	}
     
     public void start(){
         try {
@@ -53,7 +57,12 @@ public class Httpd
     }
 
 	public void stop(){
-		if (server != null) server.stop();
+		if (server != null && isAlive()) server.stop();
+	}
+
+	public boolean isAlive(){
+		if (server != null) return server.isAlive();
+		return false;
 	}
 
 	/**

@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -33,10 +34,9 @@ import com.ssm.pnas.R;
 import com.ssm.pnas.nanohttpd.Httpd;
 import com.ssm.pnas.network.NetworkManager;
 
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
-
+    public static Context sContext;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String TAG = "MainActivity";
     private ImageView mBtnEnter;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         mContext = this;
+        sContext = this;
+
+        pref = getSharedPreferences("Pnas", Context.MODE_PRIVATE);
         backPressCloseHandler = new BackPressCloseHandler(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -117,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         NetworkManager.getInstance().initialize(this);
     }
 
@@ -142,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu, menu);
@@ -161,23 +163,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (!isChecked) {
                         C.isServerToggle = 0;
+                        OnGoingNotification.getInstance(mContext).closeNotification();
+
                         findViewById(R.id.blur_block).setVisibility(View.VISIBLE);
                         findViewById(R.id.blur_block).bringToFront();
 
                         C.localIP = null;
 
                         Httpd.getInstance(mContext).stop();
+
                         Toast.makeText(mContext, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
+
                     } else {
                         findViewById(R.id.blur_block).setVisibility(View.GONE);
 
                         ipAddr = getWifiIpAddress();
                         C.localIP = ipAddr;
 
-                        if (ipAddr != null) {
+                        if (ipAddr != null && !ipAddr.equals("0.0.0.0")) {
                             C.isServerToggle = 1;
+                            OnGoingNotification.getInstance(mContext).openNotification();
 
-                            String uri = ipAddr + ":" + C.port;
+                            //String uri = ipAddr + ":" + C.port;
 
                             // btn_server_summary.setText(Html.fromHtml(String.format("<a href=\"http://%s\">%s</a> ", uri, uri)));
                             // btn_server_summary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -191,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             });
+            checkOnOff();
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -335,10 +343,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void checkOnOff(){
+        if(switchCompat != null && Httpd.getInstance(mContext).isAlive()){
+            switchCompat.setChecked(true);
+        }
+        else{
+            switchCompat.setChecked(false);
+            C.localIP = null;
+        }
+    }
+
     @Override
     public void onBackPressed() {
         backPressCloseHandler.onBackPressed();
     }
+
     @Override
     protected void onPause() {
         Log.i("log", "userSetting pause");
@@ -346,14 +365,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     protected void onDestroy() {
-
         Log.i("log", "userSetting dest");
         // TODO Auto-generated method stub
         super.onDestroy();
     }
     @Override
     protected void onRestart() {
-
         Log.i("log", "userSetting rest");
         // TODO Auto-generated method stub
         super.onRestart();
@@ -367,18 +384,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         Log.i("log", "userSetting stop");
         super.onStop();
-
-        //TODO
-        switchCompat.setChecked(false);
-        C.isServerToggle = 0;
-        C.localIP = null;
-        Httpd.getInstance(mContext).stop();
-        Toast.makeText(mContext, getResources().getString(R.string.stopserver), Toast.LENGTH_SHORT).show();
     }
     @Override
     protected void onResume() {
         Log.i("log", "userSetting resume");
         super.onResume();
+        if(switchCompat!=null)
+            checkOnOff();
     }
 
 //    /**

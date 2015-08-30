@@ -70,7 +70,6 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
         if (FileManager.getInstance().isSdCard(getActivity()) == false)
             Toast.makeText(getActivity(), "Error isSdCard", Toast.LENGTH_SHORT).show();
-//            finish();
 
         mBlurBlock = (RelativeLayout) getActivity().findViewById(R.id.blind_block);
         if (C.isServerToggle == 0) {
@@ -185,10 +184,12 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public void onSwipeStart(int position) {
+
             }
 
             @Override
             public void onSwipeEndWithDx(int position, float dx) {
+
             }
 
             @Override
@@ -202,7 +203,7 @@ public class MyPboxSwipeRefresh extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public boolean checkAbleMove() {
-                return false;
+                return true;
             }
         });
     }
